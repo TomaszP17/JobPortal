@@ -1,6 +1,6 @@
-package com.jobportal.jobportal.entity.user;
+package com.jobportal.jobportal.entities.user;
 
-import com.jobportal.jobportal.entity.Payment;
+import com.jobportal.jobportal.entities.Payment;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
