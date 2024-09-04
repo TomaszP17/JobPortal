@@ -11,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "company")
 @Data
+@DiscriminatorValue("COMPANY")
 public class Company extends User {
 
     @Length(max = 100)

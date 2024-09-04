@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,6 @@ public class EmploymentType {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "employment_type", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OfferEmploymentType> offerEmploymentTypes;
+    @OneToMany(mappedBy = "employmentType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OfferEmploymentType> offerEmploymentTypes = new HashSet<>();
 }
