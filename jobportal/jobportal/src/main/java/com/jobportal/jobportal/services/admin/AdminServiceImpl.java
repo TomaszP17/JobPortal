@@ -7,7 +7,9 @@ import com.jobportal.jobportal.entities.user.User;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.repositories.AdminRepository;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
+import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -19,13 +21,20 @@ public class AdminServiceImpl implements AdminService{
 
     private final AuthorityRepository authorityRepository;
 
-    public AdminServiceImpl(AdminRepository adminRepository, AuthorityRepository authorityRepository) {
+    private final UserAuthorityRepository userAuthorityRepository;
+
+    public AdminServiceImpl(AdminRepository adminRepository,
+                            AuthorityRepository authorityRepository,
+                            UserAuthorityRepository userAuthorityRepository) {
         this.adminRepository = adminRepository;
         this.authorityRepository = authorityRepository;
+        this.userAuthorityRepository = userAuthorityRepository;
     }
 
+    @Transactional
     @Override
     public Admin createAdmin(CreateAdminDTO createAdminDTO) {
+
         Admin admin = Admin.builder()
                 .nickname(createAdminDTO.nickname())
                 .email(createAdminDTO.email())
@@ -33,14 +42,18 @@ public class AdminServiceImpl implements AdminService{
                 .linkedinLink(createAdminDTO.linkedinLink())
                 .build();
 
-        UserAuthority authority = UserAuthority.builder()
+        admin = adminRepository.save(admin);
+
+        Authority authority = authorityRepository.findByName("ADMIN");
+
+        UserAuthority userAuthority = UserAuthority.builder()
                 .user(admin)
-                .authority(authorityRepository.findByName("ADMIN"))
+                .authority(authority)
                 .build();
 
-        admin.setUserAuthority(Set.of(authority));
+        userAuthorityRepository.save(userAuthority);
 
-        return adminRepository.save(admin);
+        return admin;
     }
 
     @Override

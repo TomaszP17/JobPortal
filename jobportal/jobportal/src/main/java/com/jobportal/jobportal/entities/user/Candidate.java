@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "candidate")
+@Table(name = "candidate_user")
 @Data
 @DiscriminatorValue("CANDIDATE")
 public class Candidate extends User {

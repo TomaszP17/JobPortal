@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "admin")
+@Table(name = "admin_user")
 @Data
 @DiscriminatorValue("ADMIN")
 @NoArgsConstructor

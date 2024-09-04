@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "company")
+@Table(name = "company_user")
 @Data
 @DiscriminatorValue("COMPANY")
 public class Company extends User {
