@@ -1,15 +1,13 @@
 package com.jobportal.jobportal.entity.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "company")
 @Data
+@DiscriminatorValue("CANDIDATE")
 public class Candidate extends User {
 
     @Length(max = 100)
