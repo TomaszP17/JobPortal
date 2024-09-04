@@ -29,8 +29,8 @@ public class OfferController {
         return ResponseEntity.ok(offerService.getOffer(offerId));
     }
 
-    @PostMapping
-    public ResponseEntity<?> addOffer(){
-        return ResponseEntity.status(HttpStatus.CREATED).body();
-    }
+//    @PostMapping
+//    public ResponseEntity<?> addOffer(){
+//        return ResponseEntity.status(HttpStatus.CREATED).body();
+//    }
 }

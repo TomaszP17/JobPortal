@@ -22,7 +22,7 @@ public abstract class User {
     private Long id;
 
     @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime createDate = LocalDateTime.now();
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
