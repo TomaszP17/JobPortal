@@ -1,7 +1,7 @@
 package com.jobportal.jobportal.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(OfferDoesNotExistsException.class)
-    public ResponseEntity<Object> handleOfferDoesNotExistsException(OfferDoesNotExistsException ex){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ProblemDetail handleOfferDoesNotExistsException(OfferDoesNotExistsException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+        body.setTitle("Item Not Found");
+        body.setProperty("hostname", "localhost");
+        return body;
     }
-
 }

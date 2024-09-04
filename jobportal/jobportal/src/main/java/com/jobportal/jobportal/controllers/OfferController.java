@@ -2,11 +2,10 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.offer.OfferResponseModel;
 import com.jobportal.jobportal.services.OfferService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,10 @@ public class OfferController {
     @GetMapping("/{offerId}")
     public ResponseEntity<OfferResponseModel> getOffer(@PathVariable long offerId){
         return ResponseEntity.ok(offerService.getOffer(offerId));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addOffer(){
+        return ResponseEntity.status(HttpStatus.CREATED).body();
     }
 }
