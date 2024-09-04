@@ -20,7 +20,7 @@ public class WorkType {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "work_type", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workType", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OfferWorkType> offerWorkTypes = new HashSet<>();
 
 }

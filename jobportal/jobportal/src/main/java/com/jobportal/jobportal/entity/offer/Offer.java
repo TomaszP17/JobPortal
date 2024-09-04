@@ -49,7 +49,7 @@ public class Offer {
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OfferWorkType> offerWorkTypes = new HashSet<>();
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Payment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
