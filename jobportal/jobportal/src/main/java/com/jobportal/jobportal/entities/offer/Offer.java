@@ -33,8 +33,7 @@ public class Offer {
     @Column(name = "salary_max")
     private Integer salaryMax;
 
-    @Lob
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
