@@ -1,6 +1,6 @@
-package com.jobportal.jobportal.entity.user;
+package com.jobportal.jobportal.entities.user;
 
-import com.jobportal.jobportal.entity.UserFavouriteOffer;
+import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.entity.user;
+package com.jobportal.jobportal.entities.user;
 
 import jakarta.persistence.*;
 import lombok.Data;

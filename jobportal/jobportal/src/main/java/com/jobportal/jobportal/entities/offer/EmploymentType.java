@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.entity.user;
+package com.jobportal.jobportal.entities.offer;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,19 +8,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "authority")
+@Table(name = "employment_type")
 @Data
-public class Authority {
+public class EmploymentType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Length(max = 25)
+    @Length(max = 50)
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "authority", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserAuthority> userAuthority = new HashSet<>();
-
+    @OneToMany(mappedBy = "employmentType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OfferEmploymentType> offerEmploymentTypes = new HashSet<>();
 }

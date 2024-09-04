@@ -1,12 +1,12 @@
-package com.jobportal.jobportal.entity.offer;
+package com.jobportal.jobportal.entities.offer;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "offer_experience")
+@Table(name = "offer_employment_type")
 @Data
-public class OfferExperience {
+public class OfferEmploymentType {
 
     @Id
     @GeneratedValue
@@ -17,6 +17,6 @@ public class OfferExperience {
     private Offer offer;
 
     @ManyToOne
-    @JoinColumn(name = "experience_id", nullable = false)
-    private Experience experience;
+    @JoinColumn(name = "employment_type_id", nullable = false)
+    private EmploymentType employmentType;
 }

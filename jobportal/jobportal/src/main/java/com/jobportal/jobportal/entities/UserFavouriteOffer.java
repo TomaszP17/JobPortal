@@ -1,7 +1,7 @@
-package com.jobportal.jobportal.entity;
+package com.jobportal.jobportal.entities;
 
-import com.jobportal.jobportal.entity.offer.Offer;
-import com.jobportal.jobportal.entity.user.User;
+import com.jobportal.jobportal.entities.offer.Offer;
+import com.jobportal.jobportal.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
