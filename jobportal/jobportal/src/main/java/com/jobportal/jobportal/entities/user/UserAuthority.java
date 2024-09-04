@@ -1,11 +1,17 @@
 package com.jobportal.jobportal.entities.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "admin")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAuthority {
 
     @Id

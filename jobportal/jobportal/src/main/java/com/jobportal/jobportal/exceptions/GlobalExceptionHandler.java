@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
         body.setProperty("hostname", "localhost");
         return body;
     }
+
+    @ExceptionHandler(UserDoesNotExistException.class)
+    public ProblemDetail handleUserDoesNotExistException(UserDoesNotExistException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+        body.setTitle("User Not Found");
+        body.setProperty("hostname", "localhost");
+        return body;
+    }
 }
