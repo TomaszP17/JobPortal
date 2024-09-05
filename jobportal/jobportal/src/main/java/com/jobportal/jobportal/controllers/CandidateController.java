@@ -1,9 +1,9 @@
 package com.jobportal.jobportal.controllers;
 
+
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
 import com.jobportal.jobportal.services.candidate.CandidateServiceImpl;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,8 +1,7 @@
 package com.jobportal.jobportal.services.user;
 
 import com.jobportal.jobportal.entities.user.User;
-import com.jobportal.jobportal.exceptions.UserDoesNotExistException;
-import com.jobportal.jobportal.mappers.UserMapper;
+import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 

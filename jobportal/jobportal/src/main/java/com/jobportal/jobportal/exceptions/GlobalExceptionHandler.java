@@ -1,5 +1,8 @@
 package com.jobportal.jobportal.exceptions;
 
+import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
+import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
+import com.jobportal.jobportal.exceptions.OfferDoesNotExistsException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -58,6 +61,15 @@ public class GlobalExceptionHandler {
         ProblemDetail body = ProblemDetail
                 .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
         body.setTitle("WorkType Not Found");
+        body.setProperty("hostname", "localhost");
+        return body;
+    }
+
+    @ExceptionHandler(AuthorityDoesNotExistException.class)
+    public ProblemDetail handleAuthorityDoesNotExistException(AuthorityDoesNotExistException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+        body.setTitle("Authority not found");
         body.setProperty("hostname", "localhost");
         return body;
     }

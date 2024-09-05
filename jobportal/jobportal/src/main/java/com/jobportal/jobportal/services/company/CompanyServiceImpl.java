@@ -1,36 +1,32 @@
-package com.jobportal.jobportal.services.candidate;
+package com.jobportal.jobportal.services.company;
 
-import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
-import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
-import com.jobportal.jobportal.entities.user.Admin;
+import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
+import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.entities.user.Authority;
 import com.jobportal.jobportal.entities.user.Candidate;
+import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
 import com.jobportal.jobportal.mappers.UserMapper;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
 import com.jobportal.jobportal.repositories.CandidateRepository;
+import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CandidateServiceImpl implements CandidateService{
+public class CompanyServiceImpl implements CompanyService{
 
-    private final CandidateRepository candidateRepository;
+    private final CompanyRepository companyRepository;
     private UserMapper userMapper;
     private final AuthorityRepository authorityRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public CandidateServiceImpl(CandidateRepository candidateRepository,
-                                UserMapper userMapper,
-                                AuthorityRepository authorityRepository,
-                                UserAuthorityRepository userAuthorityRepository,
-                                PasswordEncoder passwordEncoder) {
-        this.candidateRepository = candidateRepository;
-        this.userMapper = userMapper;
+    public CompanyServiceImpl(CompanyRepository companyRepository, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository, PasswordEncoder passwordEncoder) {
+        this.companyRepository = companyRepository;
         this.authorityRepository = authorityRepository;
         this.userAuthorityRepository = userAuthorityRepository;
         this.passwordEncoder = passwordEncoder;
@@ -38,9 +34,9 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Transactional
     @Override
-    public CreateCandidateResponseDTO createCandidate(CreateCandidateRequestDTO createCandidateRequestDTO) {
-        Candidate candidate = userMapper.toCandidateFromCreateRequest(createCandidateRequestDTO, passwordEncoder);
-        candidate = candidateRepository.save(candidate);
+    public CreateCompanyResponseDTO createCompany(CreateCompanyRequestDTO createCompanyRequestDTO) {
+        Company company = userMapper.toCompanyFromCreateRequest(createCompanyRequestDTO, passwordEncoder);
+        company = companyRepository.save(company);
 
         Authority authority = authorityRepository.findByName("CANDIDATE");
 
@@ -49,12 +45,12 @@ public class CandidateServiceImpl implements CandidateService{
         }
 
         UserAuthority userAuthority = UserAuthority.builder()
-                .user(candidate)
+                .user(company)
                 .authority(authority)
                 .build();
 
         userAuthorityRepository.save(userAuthority);
 
-        return userMapper.toCreateResponseFromCandidate(candidate);
+        return userMapper.toCreateResponseFromCompany(company);
     }
 }
