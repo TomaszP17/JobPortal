@@ -35,4 +35,10 @@ public class EmploymentTypeController {
         employmentTypeService.addEmploymentType(requestDTO);
         return new ResponseEntity<>("Created EmploymentType successfully!", HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{employmentTypeId}")
+    public ResponseEntity<String> deleteEmploymentType(@PathVariable long employmentTypeId){
+        employmentTypeService.deleteEmploymentType(employmentTypeId);
+        return new ResponseEntity<>("Deleted EmploymentType successfully!", HttpStatus.OK);
+    }
 }

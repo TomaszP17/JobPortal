@@ -45,6 +45,16 @@ public class EmploymentTypeServiceImpl implements EmploymentTypeService{
         employmentTypeRepository.save(employmentType);
     }
 
+    @Override
+    @Transactional
+    public void deleteEmploymentType(long employmentTypeId) {
+        EmploymentType employmentType = employmentTypeRepository
+                .findById(employmentTypeId)
+                .orElseThrow(() -> new EmploymentTypeDoesNotExistsException("Employment Type with that id: " + employmentTypeId + " does not exists"));
+
+        employmentTypeRepository.delete(employmentType);
+    }
+
     private EmploymentTypeResponseDTO convertToDTO(EmploymentType employmentType){
         return new EmploymentTypeResponseDTO(
                 employmentType.getId(),

@@ -12,4 +12,6 @@ public interface EmploymentTypeService {
     EmploymentTypeResponseDTO getEmploymentType(long employmentTypeId);
 
     void addEmploymentType(EmploymentTypeCreateRequestDTO requestDTO);
+
+    void deleteEmploymentType(long employmentTypeId);
 }
