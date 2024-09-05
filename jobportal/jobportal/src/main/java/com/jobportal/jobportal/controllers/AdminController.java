@@ -3,6 +3,7 @@ package com.jobportal.jobportal.controllers;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.entities.user.Admin;
 import com.jobportal.jobportal.services.admin.AdminServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Admin> createAdmin(@RequestBody CreateAdminRequestDTO createAdminDTO){
+    public ResponseEntity<Admin> createAdmin(@Valid @RequestBody CreateAdminRequestDTO createAdminDTO){
         return new ResponseEntity<>(adminService.createAdmin(createAdminDTO), HttpStatus.CREATED);
     }
 

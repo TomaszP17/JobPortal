@@ -1,6 +1,7 @@
 package com.jobportal.jobportal.entities.user;
 
 import com.jobportal.jobportal.entities.Payment;
+import com.jobportal.jobportal.entities.offer.Offer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -25,4 +26,7 @@ public class Company extends User {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Payment> payments = new HashSet<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Offer> offers;
 }

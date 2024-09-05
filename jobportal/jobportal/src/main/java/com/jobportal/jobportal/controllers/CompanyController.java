@@ -4,6 +4,7 @@ import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.services.company.CompanyService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,8 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @PostMapping()
-    public ResponseEntity<CreateCompanyResponseDTO> createCompany(@RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
+    @PostMapping
+    public ResponseEntity<CreateCompanyResponseDTO> createCompany(@Valid @RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
         return new ResponseEntity<>(companyService.createCompany(createCompanyRequestDTO), HttpStatus.CREATED);
     }
 
@@ -29,7 +30,7 @@ public class CompanyController {
         return new ResponseEntity<>(companyService.getCompanyById(id), HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<CompanyResponseDTO>> getAllCompanies(){
         return new ResponseEntity<>(companyService.getAllCompanies(), HttpStatus.OK);
     }

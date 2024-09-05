@@ -28,8 +28,9 @@ public class CompanyServiceImpl implements CompanyService{
     private final UserAuthorityRepository userAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository, PasswordEncoder passwordEncoder) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, UserMapper userMapper, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository, PasswordEncoder passwordEncoder) {
         this.companyRepository = companyRepository;
+        this.userMapper = userMapper;
         this.authorityRepository = authorityRepository;
         this.userAuthorityRepository = userAuthorityRepository;
         this.passwordEncoder = passwordEncoder;

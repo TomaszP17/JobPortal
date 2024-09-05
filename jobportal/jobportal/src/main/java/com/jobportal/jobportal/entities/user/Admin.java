@@ -16,8 +16,8 @@ import org.hibernate.validator.constraints.Length;
 @SuperBuilder
 public class Admin extends User {
 
-    @Length(max = 50)
-    @Column(name = "nickname", nullable = false)
+    @Length(max = 50, min = 3)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
 }

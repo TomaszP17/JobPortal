@@ -5,6 +5,7 @@ import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
 import com.jobportal.jobportal.services.candidate.CandidateServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,8 @@ public class CandidateController {
         this.candidateService = candidateService;
     }
 
-    @PostMapping()
-    public ResponseEntity<CreateCandidateResponseDTO> createCandidate(@RequestBody CreateCandidateRequestDTO candidateRequestDTO){
+    @PostMapping
+    public ResponseEntity<CreateCandidateResponseDTO> createCandidate(@Valid @RequestBody CreateCandidateRequestDTO candidateRequestDTO){
         return new ResponseEntity<>(candidateService.createCandidate(candidateRequestDTO), HttpStatus.CREATED);
     }
 
@@ -31,7 +32,7 @@ public class CandidateController {
         return new ResponseEntity<>(candidateService.getCandidateById(id), HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<CandidateResponseDTO>> getAllCandidates(){
         return new ResponseEntity<>(candidateService.getAllCandidates(), HttpStatus.OK);
     }

@@ -2,6 +2,7 @@ package com.jobportal.jobportal.entities.offer;
 
 import com.jobportal.jobportal.entities.Payment;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
+import com.jobportal.jobportal.entities.user.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -38,6 +39,10 @@ public class Offer {
 
     @Column(name = "is_paid")
     private boolean isPaid;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OfferTechnology> offerTechnologies = new HashSet<>();
