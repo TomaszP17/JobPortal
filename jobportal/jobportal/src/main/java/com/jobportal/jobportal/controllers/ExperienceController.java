@@ -1,13 +1,12 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.experience.ExperienceCreateRequestDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
 import com.jobportal.jobportal.services.experience.ExperienceService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,17 @@ public class ExperienceController {
     @GetMapping("/{experienceId}")
     public ResponseEntity<ExperienceResponseDTO> getExperience(@PathVariable long experienceId){
         return new ResponseEntity<>(experienceService.getExperience(experienceId), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addTechnology(@Valid @RequestBody ExperienceCreateRequestDTO requestDTO){
+        experienceService.addExperience(requestDTO);
+        return new ResponseEntity<>("Created experience successfully!", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{experienceId}")
+    public ResponseEntity<String> deleteExperience(@PathVariable long experienceId){
+        experienceService.deleteExperience(experienceId);
+        return new ResponseEntity<>("Experience deleted successfully!", HttpStatus.OK);
     }
 }

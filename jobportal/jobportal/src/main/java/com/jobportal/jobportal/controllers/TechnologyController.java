@@ -1,13 +1,12 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.technology.TechnologyCreateRequestDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
 import com.jobportal.jobportal.services.technology.TechnologyService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,17 @@ public class TechnologyController {
     @GetMapping("/{technologyId}")
     public ResponseEntity<TechnologyResponseDTO> getTechnology(@PathVariable long technologyId){
         return new ResponseEntity<>(technologyService.getTechnology(technologyId), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addTechnology(@Valid @RequestBody TechnologyCreateRequestDTO requestDTO){
+        technologyService.addTechnology(requestDTO);
+        return new ResponseEntity<>("Technology added successfully",HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{technologyId}")
+    public ResponseEntity<String> deleteTechnology(@PathVariable long technologyId){
+        technologyService.deleteTechnology(technologyId);
+        return new ResponseEntity<>("Technology deleted successfully", HttpStatus.OK);
     }
 }

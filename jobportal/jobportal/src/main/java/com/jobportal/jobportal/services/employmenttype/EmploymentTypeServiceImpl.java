@@ -1,9 +1,11 @@
 package com.jobportal.jobportal.services.employmenttype;
 
+import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeCreateRequestDTO;
 import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeResponseDTO;
 import com.jobportal.jobportal.entities.offer.EmploymentType;
 import com.jobportal.jobportal.exceptions.EmploymentTypeDoesNotExistsException;
 import com.jobportal.jobportal.repositories.EmploymentTypeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +38,23 @@ public class EmploymentTypeServiceImpl implements EmploymentTypeService{
         return convertToDTO(employmentType);
     }
 
+    @Override
+    @Transactional
+    public void addEmploymentType(EmploymentTypeCreateRequestDTO requestDTO) {
+        EmploymentType employmentType = convertToEntity(requestDTO);
+        employmentTypeRepository.save(employmentType);
+    }
+
     private EmploymentTypeResponseDTO convertToDTO(EmploymentType employmentType){
         return new EmploymentTypeResponseDTO(
                 employmentType.getId(),
                 employmentType.getName()
         );
+    }
+
+    private EmploymentType convertToEntity(EmploymentTypeCreateRequestDTO requestDTO){
+        EmploymentType employmentType = new EmploymentType();
+        employmentType.setName(requestDTO.getName());
+        return employmentType;
     }
 }
