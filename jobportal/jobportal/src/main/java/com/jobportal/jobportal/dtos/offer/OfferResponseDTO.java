@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfferResponseModel {
+public class OfferResponseDTO {
 
     private Long id;
 

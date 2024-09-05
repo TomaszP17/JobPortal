@@ -1,6 +1,6 @@
 package com.jobportal.jobportal.dtos.offer;
 
-public class OfferRequestModel {
+public class OfferCreateRequestDTO {
 
 
 

@@ -1,0 +1,30 @@
+package com.jobportal.jobportal.controllers;
+
+import com.jobportal.jobportal.dtos.worktype.WorkTypeResponseDTO;
+import com.jobportal.jobportal.services.worktype.WorkTypeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/work-types")
+public class WorkTypeController {
+
+    private final WorkTypeService workTypeService;
+
+    public WorkTypeController(WorkTypeService workTypeService) {
+        this.workTypeService = workTypeService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<WorkTypeResponseDTO>> getAllWorkTypes(){
+        return new ResponseEntity<>(workTypeService.getAllWorkTypes(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{workTypeId}")
+    public ResponseEntity<WorkTypeResponseDTO> getWorkType(@PathVariable long workTypeId){
+        return new ResponseEntity<>(workTypeService.getWorkType(workTypeId),HttpStatus.OK);
+    }
+}

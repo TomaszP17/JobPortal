@@ -1,9 +1,8 @@
 package com.jobportal.jobportal.controllers;
 
-import com.jobportal.jobportal.dtos.offer.OfferResponseModel;
-import com.jobportal.jobportal.services.OfferService;
+import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.services.offer.OfferService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +19,17 @@ public class OfferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OfferResponseModel>> getOffers(){
+    public ResponseEntity<List<OfferResponseDTO>> getOffers(){
         return ResponseEntity.ok(offerService.getAllOffers());
     }
 
     @GetMapping("/{offerId}")
-    public ResponseEntity<OfferResponseModel> getOffer(@PathVariable long offerId){
+    public ResponseEntity<OfferResponseDTO> getOffer(@PathVariable long offerId){
         return ResponseEntity.ok(offerService.getOffer(offerId));
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> addOffer(){
-//        return ResponseEntity.status(HttpStatus.CREATED).body();
-//    }
+    @PostMapping
+    public ResponseEntity<?> addOffer(){
+        return ResponseEntity.status(HttpStatus.CREATED).body(offerService.getAllOffers());
+    }
 }
