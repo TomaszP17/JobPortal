@@ -41,10 +41,10 @@ public class CompanyServiceImpl implements CompanyService{
         Company company = userMapper.toCompanyFromCreateRequest(createCompanyRequestDTO, passwordEncoder);
         company = companyRepository.save(company);
 
-        Authority authority = authorityRepository.findByName("CANDIDATE");
+        Authority authority = authorityRepository.findByName("COMPANY");
 
         if (authority == null){
-            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+            throw new AuthorityDoesNotExistException("The authority named: COMPANY does not exist");
         }
 
         UserAuthority userAuthority = UserAuthority.builder()
