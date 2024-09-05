@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "admin")
+@Table(name = "user_authority")
 @Data
 @Builder
 @NoArgsConstructor

@@ -40,6 +40,9 @@ public abstract class User {
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     @URL
     @Column(name = "github_link", length = 255)
     private String githubLink;

@@ -1,9 +1,8 @@
 package com.jobportal.jobportal.services.admin;
 
-import com.jobportal.jobportal.dtos.admin.CreateAdminDTO;
+import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.entities.user.Admin;
 import com.jobportal.jobportal.entities.user.Authority;
-import com.jobportal.jobportal.entities.user.User;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.repositories.AdminRepository;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -33,7 +31,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional
     @Override
-    public Admin createAdmin(CreateAdminDTO createAdminDTO) {
+    public Admin createAdmin(CreateAdminRequestDTO createAdminDTO) {
 
         Admin admin = Admin.builder()
                 .nickname(createAdminDTO.nickname())
