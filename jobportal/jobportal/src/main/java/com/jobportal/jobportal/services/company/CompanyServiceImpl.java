@@ -1,20 +1,23 @@
 package com.jobportal.jobportal.services.company;
 
+import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.entities.user.Authority;
-import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
+import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.UserMapper;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
-import com.jobportal.jobportal.repositories.CandidateRepository;
 import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompanyServiceImpl implements CompanyService{
@@ -52,5 +55,19 @@ public class CompanyServiceImpl implements CompanyService{
         userAuthorityRepository.save(userAuthority);
 
         return userMapper.toCreateResponseFromCompany(company);
+    }
+
+    @Override
+    public CompanyResponseDTO getCompanyById(Long id) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new UserDoesNotExistException("Company with id: " + id + " does not exist"));
+
+        return userMapper.toResponseFromCompany(company);
+    }
+
+
+    @Override
+    public List<CompanyResponseDTO> getAllCompanies() {
+        return companyRepository.findAll().stream().map(e -> userMapper.toResponseFromCompany(e)).toList();
     }
 }

@@ -1,12 +1,11 @@
 package com.jobportal.jobportal.services.candidate;
 
+import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
-import com.jobportal.jobportal.entities.user.Admin;
-import com.jobportal.jobportal.entities.user.Authority;
-import com.jobportal.jobportal.entities.user.Candidate;
-import com.jobportal.jobportal.entities.user.UserAuthority;
+import com.jobportal.jobportal.entities.user.*;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
+import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.UserMapper;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
 import com.jobportal.jobportal.repositories.CandidateRepository;
@@ -14,6 +13,8 @@ import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CandidateServiceImpl implements CandidateService{
@@ -56,5 +57,18 @@ public class CandidateServiceImpl implements CandidateService{
         userAuthorityRepository.save(userAuthority);
 
         return userMapper.toCreateResponseFromCandidate(candidate);
+    }
+
+    @Override
+    public CandidateResponseDTO getCandidateById(Long id) {
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new UserDoesNotExistException("Candidate with id: " + id + " does not exist"));
+
+        return userMapper.toResponseFromCandidate(candidate);
+    }
+
+    @Override
+    public List<CandidateResponseDTO> getAllCandidates() {
+        return candidateRepository.findAll().stream().map(e -> userMapper.toResponseFromCandidate(e)).toList();
     }
 }
