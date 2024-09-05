@@ -36,6 +36,9 @@ public class Offer {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "is_paid")
+    private boolean isPaid;
+
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OfferTechnology> offerTechnologies = new HashSet<>();
 

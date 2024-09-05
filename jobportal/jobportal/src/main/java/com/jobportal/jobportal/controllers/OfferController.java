@@ -1,7 +1,9 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.services.offer.OfferService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class OfferController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addOffer(){
-        return ResponseEntity.status(HttpStatus.CREATED).body(offerService.getAllOffers());
+    public ResponseEntity<String> addOffer(@Valid @RequestBody OfferCreateRequestDTO requestDTO){
+        return new ResponseEntity<>("Created Offer successfully!", HttpStatus.CREATED);
     }
 }
