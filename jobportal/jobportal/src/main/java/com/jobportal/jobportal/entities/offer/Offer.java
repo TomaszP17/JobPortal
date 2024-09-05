@@ -31,7 +31,7 @@ public class Offer {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "expiry_date", nullable = false)
+    @Column(name = "expiry_date")
     private LocalDateTime expiryDate;
 
     @Column(name = "salary_min")

@@ -4,7 +4,7 @@ import com.jobportal.jobportal.dtos.application.CreateApplicationRequestDTO;
 import com.jobportal.jobportal.entities.Application;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.entities.user.Candidate;
-import com.jobportal.jobportal.exceptions.OfferDoesNotExistsException;
+import com.jobportal.jobportal.exceptions.offer.OfferDoesNotExistsException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.repositories.ApplicationRepository;
 import com.jobportal.jobportal.repositories.CandidateRepository;
