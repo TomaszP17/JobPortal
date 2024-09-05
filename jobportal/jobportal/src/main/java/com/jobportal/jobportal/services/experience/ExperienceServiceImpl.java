@@ -3,7 +3,7 @@ package com.jobportal.jobportal.services.experience;
 import com.jobportal.jobportal.dtos.experience.ExperienceCreateRequestDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
 import com.jobportal.jobportal.entities.offer.Experience;
-import com.jobportal.jobportal.exceptions.ExperienceDoesNotExistsException;
+import com.jobportal.jobportal.exceptions.offer.ExperienceDoesNotExistsException;
 import com.jobportal.jobportal.repositories.ExperienceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

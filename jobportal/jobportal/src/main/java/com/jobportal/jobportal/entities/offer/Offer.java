@@ -4,7 +4,10 @@ import com.jobportal.jobportal.entities.Payment;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import com.jobportal.jobportal.entities.user.Company;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
@@ -14,6 +17,9 @@ import java.util.Set;
 @Entity
 @Table(name = "offer")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class Offer {
 
     @Id

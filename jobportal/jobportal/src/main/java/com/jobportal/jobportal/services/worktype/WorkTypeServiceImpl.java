@@ -3,7 +3,7 @@ package com.jobportal.jobportal.services.worktype;
 import com.jobportal.jobportal.dtos.worktype.WorkTypeCreateRequestDTO;
 import com.jobportal.jobportal.dtos.worktype.WorkTypeResponseDTO;
 import com.jobportal.jobportal.entities.offer.WorkType;
-import com.jobportal.jobportal.exceptions.WorkTypeDoesNotExistsException;
+import com.jobportal.jobportal.exceptions.offer.WorkTypeDoesNotExistsException;
 import com.jobportal.jobportal.repositories.WorkTypeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

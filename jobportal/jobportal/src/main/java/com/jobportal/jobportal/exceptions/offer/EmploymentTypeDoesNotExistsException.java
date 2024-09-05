@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.exceptions;
+package com.jobportal.jobportal.exceptions.offer;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

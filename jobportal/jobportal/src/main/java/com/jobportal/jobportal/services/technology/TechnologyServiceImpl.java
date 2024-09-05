@@ -3,7 +3,7 @@ package com.jobportal.jobportal.services.technology;
 import com.jobportal.jobportal.dtos.technology.TechnologyCreateRequestDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
 import com.jobportal.jobportal.entities.offer.Technology;
-import com.jobportal.jobportal.exceptions.TechnologyDoesNotExistsException;
+import com.jobportal.jobportal.exceptions.offer.TechnologyDoesNotExistsException;
 import com.jobportal.jobportal.repositories.TechnologyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
