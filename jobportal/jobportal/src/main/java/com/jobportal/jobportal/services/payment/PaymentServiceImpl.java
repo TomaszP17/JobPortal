@@ -22,6 +22,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public CreatePaymentResponseDTO createPayment(CreatePaymentRequestDTO createPaymentRequestDTO) {
-
+        return null;
     }
 }

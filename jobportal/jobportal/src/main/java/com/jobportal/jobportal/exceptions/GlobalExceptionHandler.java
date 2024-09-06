@@ -1,17 +1,16 @@
 package com.jobportal.jobportal.exceptions;
 
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
+import com.jobportal.jobportal.exceptions.offer.*;
+import com.jobportal.jobportal.exceptions.user.FavouriteOfferAlreadyExistsException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
-import com.jobportal.jobportal.exceptions.OfferDoesNotExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,5 +99,14 @@ public class GlobalExceptionHandler {
         problemDetail.setProperty("hostname", "localhost");
 
         return problemDetail;
+    }
+
+    @ExceptionHandler(FavouriteOfferAlreadyExistsException.class)
+    public ProblemDetail handleFavouriteOfferAlreadyExists(FavouriteOfferAlreadyExistsException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+        body.setTitle("FavouriteOffer is already exists");
+        body.setProperty("hostname", "localhost");
+        return body;
     }
 }

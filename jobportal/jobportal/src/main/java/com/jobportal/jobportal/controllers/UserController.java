@@ -1,6 +1,8 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.services.user.UserService;
 import com.jobportal.jobportal.services.user.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +13,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserServiceImpl userService;
 
-    public UserController(UserServiceImpl userService) {
+    private final UserService userService;
+
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -33,4 +36,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/favourite-offers")
+    public ResponseEntity<List<OfferResponseDTO>> getFavouriteOffers(@PathVariable long userId){
+        return new ResponseEntity(userService.getFavouriteOffers(userId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/favourite-offers")
+    public ResponseEntity<String> addFavouriteOffer(@PathVariable long userId, @RequestParam long offerId){
+        userService.addFavouriteOffer(userId, offerId);
+        return new ResponseEntity<>("Created Favourite Offer Successfully!", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{userId}/favourite-offers/{offerId}")
+    public ResponseEntity<String> deleteFavouriteOffer(@PathVariable long userId, @PathVariable long offerId){
+        userService.deleteFavouriteOffer(userId, offerId);
+        return new ResponseEntity<>("Deleted Favourite Offer Successfully!", HttpStatus.OK);
+    }
 }
