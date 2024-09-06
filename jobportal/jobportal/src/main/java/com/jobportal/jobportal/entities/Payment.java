@@ -28,6 +28,5 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "purchase_date", nullable = false)
-    private LocalDateTime purchaseDate;
-
+    private LocalDateTime purchaseDate = LocalDateTime.now();
 }
