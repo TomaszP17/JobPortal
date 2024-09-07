@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,18 @@ public class OfferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OfferResponseDTO>> getOffers(){
+    public ResponseEntity<List<OfferResponseDTO>> getOffers(
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(required = false) String sortBy
+            ){
+        /*List<OfferResponseDTO> offerResponseDTOS;
+
+        if(orderBy != null && sortBy != null){
+            offerResponseDTOS = offerService.getAllOffers();
+            Comparator<OfferResponseDTO> comparator =
+        }else{
+            return ResponseEntity.ok(offerService.getAllOffers());
+        }*/
         return ResponseEntity.ok(offerService.getAllOffers());
     }
 
