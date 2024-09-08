@@ -1,6 +1,7 @@
 package com.jobportal.jobportal.services.company;
 
 import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
+import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.entities.user.Authority;
@@ -12,12 +13,13 @@ import com.jobportal.jobportal.mappers.UserMapper;
 import com.jobportal.jobportal.repositories.AuthorityRepository;
 import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.repositories.UserAuthorityRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CompanyServiceImpl implements CompanyService{
@@ -66,9 +68,14 @@ public class CompanyServiceImpl implements CompanyService{
         return userMapper.toResponseFromCompany(company);
     }
 
-
     @Override
     public List<CompanyResponseDTO> getAllCompanies() {
         return companyRepository.findAll().stream().map(e -> userMapper.toResponseFromCompany(e)).toList();
+    }
+
+    @Override
+    public List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return companyRepository.findCompaniesWithOfferStats(sortBy, pageable);
     }
 }

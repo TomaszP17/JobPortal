@@ -1,7 +1,7 @@
 package com.jobportal.jobportal.services.company;
 
-import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
+import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 
@@ -11,4 +11,5 @@ public interface CompanyService {
     CreateCompanyResponseDTO createCompany(CreateCompanyRequestDTO createCompanyRequestDTO);
     CompanyResponseDTO getCompanyById(Long id);
     List<CompanyResponseDTO> getAllCompanies();
+    List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size);
 }

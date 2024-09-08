@@ -104,8 +104,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FavouriteOfferAlreadyExistsException.class)
     public ProblemDetail handleFavouriteOfferAlreadyExists(FavouriteOfferAlreadyExistsException ex){
         ProblemDetail body = ProblemDetail
-                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+                .forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getLocalizedMessage());
         body.setTitle("FavouriteOffer is already exists");
+        body.setProperty("hostname", "localhost");
+        return body;
+    }
+
+    @ExceptionHandler(InvalidSortByParameterException.class)
+    public ProblemDetail handleFavouriteOfferAlreadyExists(InvalidSortByParameterException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getLocalizedMessage());
+        body.setTitle("Bad sortBy Parameter");
         body.setProperty("hostname", "localhost");
         return body;
     }

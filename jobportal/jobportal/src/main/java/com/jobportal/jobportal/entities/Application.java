@@ -21,7 +21,7 @@ public class Application {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "candidate_user_id", nullable = true)
+    @JoinColumn(name = "candidate_user_id")
     private Candidate candidate;
 
     @ManyToOne
@@ -29,7 +29,11 @@ public class Application {
     private Offer offer;
 
     @Lob
-    @Column(name = "pdf", nullable = true)
+    @Column(name = "pdf")
     private byte[] pdf;
+
+    @ManyToOne
+    @JoinColumn(name = "application_status", nullable = false)
+    private ApplicationStatus applicationStatus;
 
 }

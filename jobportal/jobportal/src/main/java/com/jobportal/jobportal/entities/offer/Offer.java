@@ -4,6 +4,7 @@ import com.jobportal.jobportal.entities.Payment;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import com.jobportal.jobportal.entities.user.Company;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,9 +36,11 @@ public class Offer {
     private LocalDateTime expiryDate;
 
     @Column(name = "salary_min")
+    @Min(0)
     private Integer salaryMin;
 
     @Column(name = "salary_max")
+    @Min(0)
     private Integer salaryMax;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
@@ -49,6 +52,9 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OfferTechnology> offerTechnologies = new HashSet<>();
@@ -67,4 +73,9 @@ public class Offer {
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserFavouriteOffer> userFavouriteOffers = new HashSet<>();
+
+    @PrePersist
+    public void prePersist(){
+        createdAt = LocalDateTime.now();
+    }
 }
