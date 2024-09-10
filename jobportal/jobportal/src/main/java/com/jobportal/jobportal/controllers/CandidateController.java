@@ -4,6 +4,7 @@ package com.jobportal.jobportal.controllers;
 import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
+import com.jobportal.jobportal.services.candidate.CandidateService;
 import com.jobportal.jobportal.services.candidate.CandidateServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import java.util.List;
 @RequestMapping("/api/candidates")
 public class CandidateController {
 
-    private final CandidateServiceImpl candidateService;
+    private final CandidateService candidateService;
 
-    public CandidateController(CandidateServiceImpl candidateService) {
+    public CandidateController(CandidateService candidateService) {
         this.candidateService = candidateService;
     }
 

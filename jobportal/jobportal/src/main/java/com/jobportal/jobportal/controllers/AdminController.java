@@ -1,7 +1,9 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.admin.AdminResponseDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.entities.user.Admin;
+import com.jobportal.jobportal.services.admin.AdminService;
 import com.jobportal.jobportal.services.admin.AdminServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admins")
 public class AdminController {
-    private final AdminServiceImpl adminService;
-    public AdminController(AdminServiceImpl adminService) {
+    private final AdminService adminService;
+    public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
     @PostMapping
-    public ResponseEntity<Admin> createAdmin(@Valid @RequestBody CreateAdminRequestDTO createAdminDTO){
-        return new ResponseEntity<>(adminService.createAdmin(createAdminDTO), HttpStatus.CREATED);
+    public ResponseEntity<String> createAdmin(@Valid @RequestBody CreateAdminRequestDTO createAdminDTO){
+        adminService.createAdmin(createAdminDTO);
+        return new ResponseEntity<>("Create Admin Successfully!", HttpStatus.CREATED);
     }
     @GetMapping
-    public ResponseEntity<List<Admin>> getAllAdmins(){
+    public ResponseEntity<List<AdminResponseDTO>> getAllAdmins(){
         return new ResponseEntity<>(adminService.getAllAdmins(), HttpStatus.OK);
     }
 

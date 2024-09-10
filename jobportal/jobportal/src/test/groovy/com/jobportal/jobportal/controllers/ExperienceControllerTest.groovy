@@ -15,8 +15,9 @@ class ExperienceControllerTest extends Specification {
     def "should return all experiences"(){
         given: "mocked service response"
         def experiences = [new ExperienceResponseDTO(1L, "Junior")]
+        experienceService.getAllExperiences() >> experiences
 
-        when "the getAllExperiences method is called"
+        when: "the getAllExperiences method is called"
         ResponseEntity<List<ExperienceResponseDTO>> response = controller.getAllExperiences()
 
         then: "the service returns the correct experiences and Http Status OK"
@@ -48,7 +49,7 @@ class ExperienceControllerTest extends Specification {
         then: "the service is called and the Http status"
         1 * experienceService.addExperience(request)
         response.getStatusCode() == HttpStatus.CREATED
-        response.getBody() == "Technology added successfully"
+        response.getBody() == "Created experience successfully!"
     }
 
     def "should delete a experience"(){
@@ -61,6 +62,6 @@ class ExperienceControllerTest extends Specification {
         then: "the service is called to delete the experience and HTTP OK"
         1 * experienceService.deleteExperience(experienceId)
         response.getStatusCode() == HttpStatus.OK
-        response.getBody() == "Experience deleted successfully"
+        response.getBody() == "Experience deleted successfully!"
     }
 }

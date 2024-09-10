@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.services.admin;
 
+import com.jobportal.jobportal.dtos.admin.AdminResponseDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.entities.user.Admin;
 import com.jobportal.jobportal.entities.user.Authority;
@@ -37,7 +38,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional
     @Override
-    public Admin createAdmin(CreateAdminRequestDTO createAdminDTO) {
+    public void createAdmin(CreateAdminRequestDTO createAdminDTO) {
 
         Admin admin = userMapper.toAdminFromCreateRequest(createAdminDTO, passwordEncoder);
 
@@ -51,12 +52,14 @@ public class AdminServiceImpl implements AdminService{
                 .build();
 
         userAuthorityRepository.save(userAuthority);
-
-        return admin;
     }
 
     @Override
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll();
+    public List<AdminResponseDTO> getAllAdmins() {
+        return adminRepository
+                .findAll()
+                .stream()
+                .map(userMapper::toAdminResponseDTOFromAdmin)
+                .toList();
     }
 }

@@ -49,7 +49,7 @@ class WorkTypeControllerTest extends Specification {
         then: "the service is called and the HTTP status is CREATED"
         1 * workTypeService.addWorkType(request)
         response.getStatusCode() == HttpStatus.CREATED
-        response.getBody() == "WorkType added successfully"
+        response.getBody() == "Created WorkType successfully!"
     }
 
     def "should delete a worktype"(){
@@ -62,6 +62,6 @@ class WorkTypeControllerTest extends Specification {
         then: "the service is called and the HTTP status is OK"
         1 * workTypeService.deleteWorkType(workTypeId)
         response.getStatusCode() == HttpStatus.OK
-        response.getBody() == "WorkType deleted successfully"
+        response.getBody() == "Deleted WorkType successfully!"
     }
 }

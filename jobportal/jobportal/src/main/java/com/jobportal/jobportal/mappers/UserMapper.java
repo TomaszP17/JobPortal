@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.mappers;
 
+import com.jobportal.jobportal.dtos.admin.AdminResponseDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
@@ -31,6 +32,8 @@ public interface UserMapper {
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     Admin toAdminFromCreateRequest(CreateAdminRequestDTO createAdminRequestDTO, @Context PasswordEncoder passwordEncoder);
     CreateAdminResponseDTO toCreateResponseFromAdmin(Admin admin);
+    Admin toAdminFromResponseDTO(AdminResponseDTO responseDTO);
+    AdminResponseDTO toAdminResponseDTOFromAdmin(Admin admin);
 
 
 

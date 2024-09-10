@@ -31,7 +31,7 @@ public class NewsService {
                 .retrieve()
                 .bodyToMono(NewsResponseDTO.class)
                 .onErrorResume(e -> {
-                    System.err.println("Błąd podczas pobierania newsów: " + e.getMessage());
+                    System.err.println("Error while downloading news: " + e.getMessage());
                     return Mono.empty();
                 });
     }
