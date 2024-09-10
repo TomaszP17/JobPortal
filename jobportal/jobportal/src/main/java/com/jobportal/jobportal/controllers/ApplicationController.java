@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/applications")
 public class ApplicationController {
-
     private final ApplicationServiceImpl applicationService;
-
     public ApplicationController(ApplicationServiceImpl applicationService) {
         this.applicationService = applicationService;
     }
-
     @PostMapping
     public ResponseEntity<String> createApplication(@RequestBody CreateApplicationRequestDTO createApplicationRequestDTO){
         return new ResponseEntity<>(applicationService.applyToOffer(createApplicationRequestDTO), HttpStatus.CREATED);

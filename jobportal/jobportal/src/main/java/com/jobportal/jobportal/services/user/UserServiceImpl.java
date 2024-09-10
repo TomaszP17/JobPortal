@@ -18,32 +18,24 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
-
     private final UserRepository userRepository;
-
     private final UserFavouriteOfferRepository userFavouriteOfferRepository;
-
     private final OfferRepository offerRepository;
-
     private final OfferMapper offerMapper;
-
     public UserServiceImpl(UserRepository userRepository, UserFavouriteOfferRepository userFavouriteOfferRepository, OfferRepository offerRepository, OfferMapper offerMapper) {
         this.userRepository = userRepository;
         this.userFavouriteOfferRepository = userFavouriteOfferRepository;
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
     }
-
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException("User with id: " + id + " has not been found"));
     }
-
     @Override
     public void softDeleteUser(Long id) {
         User user = userRepository.findById(id)
@@ -52,7 +44,6 @@ public class UserServiceImpl implements UserService{
         user.setIsDeleted(true);
         userRepository.save(user);
     }
-
     @Override
     public List<OfferResponseDTO> getFavouriteOffers(Long userId) {
         userRepository
@@ -60,14 +51,12 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new UserDoesNotExistException("User with id: " + userId + " has not been found"));
 
         List<Long> allOfferIdsByUserId = userFavouriteOfferRepository.findAllOfferIdsByUserId(userId);
-
         return offerRepository
                 .findAllById(allOfferIdsByUserId)
                 .stream()
                 .map(offerMapper::toOfferResponseFromOffer)
                 .toList();
     }
-
     @Override
     @Transactional
     public void addFavouriteOffer(Long userId, Long offerId) {
@@ -83,18 +72,14 @@ public class UserServiceImpl implements UserService{
         if (userFavouriteOffer != null){
             throw new FavouriteOfferAlreadyExistsException("Favourite Offer already exists");
         }
-
         UserFavouriteOffer favouriteOffer = new UserFavouriteOffer();
         favouriteOffer.setUser(user);
         favouriteOffer.setOffer(offer);
-
         userFavouriteOfferRepository.save(favouriteOffer);
     }
-
     @Override
     @Transactional
     public void deleteFavouriteOffer(Long userId, Long offerId) {
-
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UserDoesNotExistException("User with id: " + userId + " has not been found"));
@@ -107,7 +92,6 @@ public class UserServiceImpl implements UserService{
         if (userFavouriteOffer == null){
             throw new FavouriteOfferAlreadyExistsException("Favourite Offer does not exists");
         }
-
         userFavouriteOfferRepository.delete(userFavouriteOffer);
     }
 }

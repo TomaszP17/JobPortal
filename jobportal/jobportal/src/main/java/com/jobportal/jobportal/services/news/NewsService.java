@@ -8,7 +8,6 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class NewsService {
-
     private final WebClient webClient;
 
     @Value("${newsapi.url}")
@@ -20,7 +19,6 @@ public class NewsService {
     public NewsService(WebClient webClient) {
         this.webClient = webClient;
     }
-
     public Mono<NewsResponseDTO> fetchNews(String query) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -30,12 +28,11 @@ public class NewsService {
                         .queryParam("q", query)
                         .queryParam("apiKey", apiKey)
                         .build())
-                .retrieve()  // Pobierz odpowiedź
-                .bodyToMono(NewsResponseDTO.class)  // Mapowanie na obiekt Java
+                .retrieve()
+                .bodyToMono(NewsResponseDTO.class)
                 .onErrorResume(e -> {
-                    // Obsługa błędów
                     System.err.println("Błąd podczas pobierania newsów: " + e.getMessage());
-                    return Mono.empty();  // Zwraca pustą odpowiedź w przypadku błędu
+                    return Mono.empty();
                 });
     }
 }

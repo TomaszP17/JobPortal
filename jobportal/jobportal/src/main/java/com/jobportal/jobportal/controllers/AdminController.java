@@ -13,18 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admins")
 public class AdminController {
-
     private final AdminServiceImpl adminService;
-
     public AdminController(AdminServiceImpl adminService) {
         this.adminService = adminService;
     }
-
     @PostMapping
     public ResponseEntity<Admin> createAdmin(@Valid @RequestBody CreateAdminRequestDTO createAdminDTO){
         return new ResponseEntity<>(adminService.createAdmin(createAdminDTO), HttpStatus.CREATED);
     }
-
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdmins(){
         return new ResponseEntity<>(adminService.getAllAdmins(), HttpStatus.OK);

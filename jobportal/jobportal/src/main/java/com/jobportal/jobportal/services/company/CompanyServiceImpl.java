@@ -25,7 +25,7 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService{
 
     private final CompanyRepository companyRepository;
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
     private final AuthorityRepository authorityRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
@@ -70,9 +70,8 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public List<CompanyResponseDTO> getAllCompanies() {
-        return companyRepository.findAll().stream().map(e -> userMapper.toResponseFromCompany(e)).toList();
+        return companyRepository.findAll().stream().map(userMapper::toResponseFromCompany).toList();
     }
-
     @Override
     public List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

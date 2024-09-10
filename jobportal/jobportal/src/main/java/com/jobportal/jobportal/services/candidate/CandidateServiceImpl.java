@@ -20,7 +20,7 @@ import java.util.List;
 public class CandidateServiceImpl implements CandidateService{
 
     private final CandidateRepository candidateRepository;
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
     private final AuthorityRepository authorityRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
@@ -69,6 +69,6 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Override
     public List<CandidateResponseDTO> getAllCandidates() {
-        return candidateRepository.findAll().stream().map(e -> userMapper.toResponseFromCandidate(e)).toList();
+        return candidateRepository.findAll().stream().map(userMapper::toResponseFromCandidate).toList();
     }
 }

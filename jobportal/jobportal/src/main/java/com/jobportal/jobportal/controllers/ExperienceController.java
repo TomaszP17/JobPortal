@@ -31,7 +31,7 @@ public class ExperienceController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addTechnology(@Valid @RequestBody ExperienceCreateRequestDTO requestDTO){
+    public ResponseEntity<String> addExperience(@Valid @RequestBody ExperienceCreateRequestDTO requestDTO){
         experienceService.addExperience(requestDTO);
         return new ResponseEntity<>("Created experience successfully!", HttpStatus.CREATED);
     }
