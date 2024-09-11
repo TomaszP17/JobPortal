@@ -1,6 +1,7 @@
 package com.jobportal.jobportal.controllers
 
 import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO
+import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO
 import com.jobportal.jobportal.services.candidate.CandidateService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,6 +37,19 @@ class CandidateControllerTest extends Specification {
         then: "the service returns the correct candidate and HTTP status is OK"
         response.getStatusCode() == HttpStatus.OK
         response.getBody() == candidate
+    }
+
+    def "should add new candidate"(){
+        given: "a valid candidate create request"
+        def request = new CreateCandidateRequestDTO("Tomasz", "Plucinski", "tplucinski15@gmail.com", "a1B@password")
+
+        when: "the createCandidate method is called"
+        ResponseEntity<String> response = controller.createCandidate(request)
+
+        then: "the service is called and the HTTP status is CREATED"
+        1 * candidateService.createCandidate(request)
+        response.getStatusCode() == HttpStatus.CREATED
+        response.getBody() == "Candidate Created Successfully!"
     }
 
 }

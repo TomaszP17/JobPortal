@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.entities.offer;
 
+import com.jobportal.jobportal.entities.Localization;
 import com.jobportal.jobportal.entities.Payment;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import com.jobportal.jobportal.entities.user.Company;
@@ -52,6 +53,10 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "localization_id", nullable = false)
+    private Localization localization;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

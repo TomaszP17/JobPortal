@@ -22,8 +22,9 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateCompanyResponseDTO> createCompany(@Valid @RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
-        return new ResponseEntity<>(companyService.createCompany(createCompanyRequestDTO), HttpStatus.CREATED);
+    public ResponseEntity<String> createCompany(@Valid @RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
+        companyService.createCompany(createCompanyRequestDTO);
+        return new ResponseEntity<>("Company Created Successfully!", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -44,4 +45,6 @@ public class CompanyController {
         List<CompanyResponseOfferStatsDTO> companies = companyService.getCompaniesWithOfferStats(sortBy, page, size);
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
+
+    //todo: deleteMapping
 }

@@ -24,8 +24,9 @@ public class CandidateController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateCandidateResponseDTO> createCandidate(@Valid @RequestBody CreateCandidateRequestDTO candidateRequestDTO){
-        return new ResponseEntity<>(candidateService.createCandidate(candidateRequestDTO), HttpStatus.CREATED);
+    public ResponseEntity<String> createCandidate(@Valid @RequestBody CreateCandidateRequestDTO candidateRequestDTO){
+        candidateService.createCandidate(candidateRequestDTO);
+        return new ResponseEntity<>("Candidate Created Successfully!", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -37,4 +38,6 @@ public class CandidateController {
     public ResponseEntity<List<CandidateResponseDTO>> getAllCandidates(){
         return new ResponseEntity<>(candidateService.getAllCandidates(), HttpStatus.OK);
     }
+
+    //todo: add deleteMapping
 }
