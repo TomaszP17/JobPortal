@@ -39,7 +39,6 @@ public class ApplicationServiceImpl implements ApplicationService{
         Application application = Application.builder()
                 .offer(offer)
                 .candidate(candidate)
-                .pdf(createApplicationRequestDTO.pdf())
                 .build();
 
         applicationRepository.save(application);

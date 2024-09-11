@@ -28,12 +28,12 @@ public class Application {
     @JoinColumn(name = "offer_id", nullable = false)
     private Offer offer;
 
-    @Lob
-    @Column(name = "pdf")
-    private byte[] pdf;
-
     @ManyToOne
     @JoinColumn(name = "application_status", nullable = false)
     private ApplicationStatus applicationStatus;
+
+    @OneToOne
+    @JoinColumn(name = "pdf_id", referencedColumnName = "id")
+    private Pdf pdf;
 
 }
