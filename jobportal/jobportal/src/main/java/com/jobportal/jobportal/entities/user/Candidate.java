@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.entities.user;
 
+import com.jobportal.jobportal.entities.Pdf;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -21,7 +22,7 @@ public class Candidate extends User {
     @Column(name = "experience_years", nullable = false)
     private Integer experienceYears = 0;
 
-    @Lob
-    @Column(name = "pdf")
-    private byte[] pdf;
+    @OneToOne
+    @JoinColumn(name = "pdf_id", referencedColumnName = "id")
+    private Pdf pdf;
 }
