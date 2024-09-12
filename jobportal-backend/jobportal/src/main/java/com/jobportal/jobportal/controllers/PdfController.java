@@ -24,10 +24,9 @@ public class PdfController {
 
     // nie przekazywać request parama, tylko przechowywac w bazie danych
     @GetMapping("/view/{pdfId}")
-    public ResponseEntity<InputStreamResource> viewPdf(@PathVariable Long pdfId,
-                                                       @RequestParam String pdfName) {
+    public ResponseEntity<InputStreamResource> viewPdf(@PathVariable Long pdfId) {
         try {
-            PdfDownloadResponseDTO pdfDownloadResponseDTO = pdfService.downloadPdf(pdfId, pdfName);
+            PdfDownloadResponseDTO pdfDownloadResponseDTO = pdfService.downloadPdf(pdfId);
             InputStream inputStream = pdfDownloadResponseDTO.pdfInputStream();
 
             HttpHeaders headers = new HttpHeaders();

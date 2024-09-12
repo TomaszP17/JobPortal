@@ -87,7 +87,7 @@ public class CandidateServiceImpl implements CandidateService{
             if(candidate.getPdf() != null){
                 candidate.setPdf(null);
             }
-            candidate.setPdf(pdfService.uploadPdf(pdf, candidate.getFirstName() + "-" + candidate.getLastName()));
+            candidate.setPdf(pdfService.uploadPdf(pdf, candidate.getFirstName() + "_" + candidate.getLastName()));
         }
 
         return userMapper.toUpdateResponseFromCandidate(candidateRepository.save(candidate));

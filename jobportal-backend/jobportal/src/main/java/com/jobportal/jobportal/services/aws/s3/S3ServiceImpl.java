@@ -27,18 +27,19 @@ public class S3ServiceImpl implements S3Service {
     @Override
     @SneakyThrows
     public String uploadPdf(@NonNull final MultipartFile file) {
-        String key = UUID.randomUUID() + ".pdf";
+        String uuid = UUID.randomUUID().toString();
         String bucketName = awsS3BucketConfig.getBucketName();
+        String key = uuid + ".pdf";
 
         s3Template.upload(bucketName, key, file.getInputStream());
 
-        return key;
+        return uuid;
     }
 
     @Override
     public void deletePdf(@NonNull final String uuid) {
         String bucketName = awsS3BucketConfig.getBucketName();
-        s3Template.deleteObject(bucketName, uuid);
+        s3Template.deleteObject(bucketName, uuid + ".pdf");
     }
 
     @Override
@@ -46,14 +47,14 @@ public class S3ServiceImpl implements S3Service {
         String bucketName = awsS3BucketConfig.getBucketName();
         Duration urlValidity = Duration.ofMinutes(20);
 
-        return s3Template.createSignedGetURL(bucketName, uuid, urlValidity);
+        return s3Template.createSignedGetURL(bucketName, uuid + ".pdf", urlValidity);
     }
 
     @Override
     @SneakyThrows
     public InputStream getPdfStream(@NonNull final String uuid) {
         String bucketName = awsS3BucketConfig.getBucketName();
-        return s3Template.download(bucketName, uuid).getInputStream();
+        return s3Template.download(bucketName, uuid + ".pdf").getInputStream();
     }
 
 //    @SneakyThrows

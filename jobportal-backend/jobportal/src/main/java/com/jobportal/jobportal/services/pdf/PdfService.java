@@ -13,5 +13,5 @@ public interface PdfService {
 
     void deletePdf(Long id);
 
-    PdfDownloadResponseDTO downloadPdf(Long pdfId, String pdfName);
+    PdfDownloadResponseDTO downloadPdf(Long pdfId);
 }

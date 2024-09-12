@@ -28,6 +28,7 @@ public class PdfServiceImpl implements PdfService {
 
         Pdf pdfFile = Pdf.builder()
                 .s3Uuid(uuid)
+                .fileName(userName + "_" + "CV")
                 .build();
 
         return pdfRepository.save(pdfFile);
@@ -41,13 +42,13 @@ public class PdfServiceImpl implements PdfService {
         pdfRepository.deleteById(id);
     }
 
-    public PdfDownloadResponseDTO downloadPdf(Long pdfId, String pdfName) {
+    public PdfDownloadResponseDTO downloadPdf(Long pdfId) {
         try {
             Pdf pdf = pdfRepository.findById(pdfId).orElseThrow(RuntimeException::new);
 
             InputStream inputStream = s3Service.getPdfStream(pdf.getS3Uuid());
 
-            return new PdfDownloadResponseDTO(inputStream, pdfName);
+            return new PdfDownloadResponseDTO(inputStream, pdf.getFileName());
         } catch (Exception e) {
             throw new RuntimeException("Error fetching and modifying the PDF filename", e);
         }
