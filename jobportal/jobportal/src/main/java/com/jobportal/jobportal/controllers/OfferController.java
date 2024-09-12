@@ -2,6 +2,7 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.services.offer.OfferService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,13 @@ public class OfferController {
     public ResponseEntity<String> deleteOffer(@PathVariable long offerId){
         offerService.deleteOffer(offerId);
         return new ResponseEntity<>("Deleted Offer successfully!", HttpStatus.OK);
+    }
+
+    @GetMapping("/filter")
+    public List<Offer> getOffersByLocalization(
+            @RequestParam(required = false) String localization
+    ){
+
+        return null;
     }
 }

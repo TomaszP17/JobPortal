@@ -41,7 +41,6 @@ public class S3ServiceImpl implements S3Service {
         s3Template.deleteObject(bucketName, uuid);
     }
 
-
     @Override
     public URL generateDownloadUrl(@NonNull final String uuid) {
         String bucketName = awsS3BucketConfig.getBucketName();
