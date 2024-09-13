@@ -3,9 +3,7 @@ package com.jobportal.jobportal.mappers;
 import com.jobportal.jobportal.dtos.admin.AdminResponseDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminResponseDTO;
-import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
-import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
-import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
+import com.jobportal.jobportal.dtos.candidate.*;
 import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
@@ -22,6 +20,9 @@ public interface UserMapper {
     Candidate toCandidateFromCreateRequest(CreateCandidateRequestDTO candidateDTO, @Context PasswordEncoder passwordEncoder);
     CreateCandidateResponseDTO toCreateResponseFromCandidate(Candidate candidate);
     CandidateResponseDTO toResponseFromCandidate(Candidate candidate);
+    UpdateCandidateResponseDTO toUpdateResponseFromCandidate(Candidate candidate);
+
+    void updateCandidate(UpdateCandidateRequestDTO updateCandidateRequestDTO, @MappingTarget Candidate candidate);
 
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")

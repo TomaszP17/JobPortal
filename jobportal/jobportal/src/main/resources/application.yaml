@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: AKIA4WJPWMHIPPVCPZAU
+        secret-key: 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
+      region:
+        static: eu-central-1
+
+jobportal:
+  jobportal:
+    aws:
+      s3:
+        bucket-name: jobportaldev
+        presigned-url:
+          validity: 3600
