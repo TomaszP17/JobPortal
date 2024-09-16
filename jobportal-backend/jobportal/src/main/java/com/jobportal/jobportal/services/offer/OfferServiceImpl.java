@@ -8,6 +8,7 @@ import com.jobportal.jobportal.exceptions.offer.*;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.OfferMapper;
 import com.jobportal.jobportal.repositories.*;
+import com.jobportal.jobportal.services.localization.LocalizationService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,9 @@ public class OfferServiceImpl implements OfferService {
     private final OfferExperienceRepository offerExperienceRepository;
     private final OfferEmploymentTypeRepository offerEmploymentTypeRepository;
     private final OfferWorkTypeRepository offerWorkTypeRepository;
-    private final LocalizationRepository localizationRepository;
+    private final LocalizationService localizationService;
 
-    public OfferServiceImpl(OfferRepository offerRepository, TechnologyRepository technologyRepository, ExperienceRepository experienceRepository, WorkTypeRepository workTypeRepository, EmploymentTypeRepository employmentTypeRepository, CompanyRepository companyRepository, OfferMapper offerMapper, OfferTechnologyRepository offerTechnologyRepository, OfferExperienceRepository offerExperienceRepository, OfferEmploymentTypeRepository offerEmploymentTypeRepository, OfferWorkTypeRepository offerWorkTypeRepository, LocalizationRepository localizationRepository) {
+    public OfferServiceImpl(OfferRepository offerRepository, TechnologyRepository technologyRepository, ExperienceRepository experienceRepository, WorkTypeRepository workTypeRepository, EmploymentTypeRepository employmentTypeRepository, CompanyRepository companyRepository, OfferMapper offerMapper, OfferTechnologyRepository offerTechnologyRepository, OfferExperienceRepository offerExperienceRepository, OfferEmploymentTypeRepository offerEmploymentTypeRepository, OfferWorkTypeRepository offerWorkTypeRepository, LocalizationService localizationService) {
         this.offerRepository = offerRepository;
         this.technologyRepository = technologyRepository;
         this.experienceRepository = experienceRepository;
@@ -44,7 +45,7 @@ public class OfferServiceImpl implements OfferService {
         this.offerExperienceRepository = offerExperienceRepository;
         this.offerEmploymentTypeRepository = offerEmploymentTypeRepository;
         this.offerWorkTypeRepository = offerWorkTypeRepository;
-        this.localizationRepository = localizationRepository;
+        this.localizationService = localizationService;
     }
     @Override
     public List<OfferResponseDTO> getAllOffers(String orderBy, String sortBy) {
@@ -116,7 +117,7 @@ public class OfferServiceImpl implements OfferService {
 
         Offer offer = offerMapper.toOfferFromCreateRequest(requestDTO);
         offer.setCompany(company);
-        offer.setLocalization(localizationRepository.findById(1L).orElseThrow());
+        offer.setLocalization(localizationService.addLocalization(requestDTO.getRequestDTO()));
 
         offerRepository.save(offer);
 

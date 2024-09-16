@@ -1,13 +1,13 @@
 package com.jobportal.jobportal.services.geocoding;
 
+import com.jobportal.jobportal.dtos.geocoding.CoordinatesDTO;
 import com.jobportal.jobportal.dtos.geocoding.GeocodingResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Service
-public class GeocodingServiceImpl implements GeocodingService{
+public class GeocodingServiceImpl implements GeocodingService {
 
     private final WebClient webClient;
 
@@ -18,8 +18,8 @@ public class GeocodingServiceImpl implements GeocodingService{
         this.webClient = webClient;
     }
 
-    public Mono<GeocodingResponseDTO> fetchCoordinates(String address) {
-        return webClient.get()
+    public CoordinatesDTO fetchCoordinates(String address) {
+        GeocodingResponseDTO response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .host("maps.googleapis.com")
@@ -29,9 +29,17 @@ public class GeocodingServiceImpl implements GeocodingService{
                         .build())
                 .retrieve()
                 .bodyToMono(GeocodingResponseDTO.class)
-                .onErrorResume(e -> {
-                    System.err.println("Error while fetching coordinates: " + e.getMessage());
-                    return Mono.empty();
-                });
+                .block();
+
+        if (response != null && !response.getResults().isEmpty()) {
+            Double lat = response.getResults().getFirst().getGeometry().getLocation().getLat();
+            Double lng = response.getResults().getFirst().getGeometry().getLocation().getLng();
+            return new CoordinatesDTO(lat, lng);
+        }
+
+        // Loguj odpowiedź w przypadku problemów
+        System.out.println("Geocoding API zwróciło pustą odpowiedź lub brak wyników.");
+        return new CoordinatesDTO(0.0, 0.0);
     }
+
 }

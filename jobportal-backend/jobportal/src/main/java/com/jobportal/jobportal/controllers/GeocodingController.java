@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.geocoding.CoordinatesDTO;
 import com.jobportal.jobportal.dtos.geocoding.GeocodingResponseDTO;
 import com.jobportal.jobportal.services.geocoding.GeocodingService;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,7 @@ public class GeocodingController {
     }
 
     @GetMapping
-    public ResponseEntity<Mono<GeocodingResponseDTO>> getCoordinates(@RequestParam String address) {
+    public ResponseEntity<CoordinatesDTO> getCoordinates(@RequestParam String address) {
         return new ResponseEntity<>(geocodingService.fetchCoordinates(address), HttpStatus.OK);
     }
-
 }

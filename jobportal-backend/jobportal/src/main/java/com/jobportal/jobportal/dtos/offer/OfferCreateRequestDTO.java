@@ -2,6 +2,7 @@ package com.jobportal.jobportal.dtos.offer;
 
 import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeCreateRequestDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceCreateRequestDTO;
+import com.jobportal.jobportal.dtos.localization.LocalizationCreateRequestDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyCreateRequestDTO;
 import com.jobportal.jobportal.dtos.worktype.WorkTypeCreateRequestDTO;
 
@@ -38,4 +39,6 @@ public class OfferCreateRequestDTO {
     private Set<Long> employmentType;
 
     private Set<Long> workTypes;
+
+    private LocalizationCreateRequestDTO requestDTO;
 }
