@@ -1,8 +1,8 @@
 package com.jobportal.jobportal.services.payment;
 
 import com.jobportal.jobportal.dtos.payment.CreatePaymentRequestDTO;
-import com.jobportal.jobportal.dtos.payment.CreatePaymentResponseDTO;
+import com.stripe.exception.StripeException;
 
 public interface PaymentService {
-    CreatePaymentResponseDTO createPayment(CreatePaymentRequestDTO createPaymentRequestDTO);
+    String createPayment(CreatePaymentRequestDTO createPaymentRequestDTO) throws StripeException;
 }

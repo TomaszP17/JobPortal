@@ -2,8 +2,10 @@ package com.jobportal.jobportal.exceptions;
 
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
 import com.jobportal.jobportal.exceptions.offer.*;
+import com.jobportal.jobportal.exceptions.payment.PaymentStripePriceDoesNotExistException;
 import com.jobportal.jobportal.exceptions.user.FavouriteOfferAlreadyExistsException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
@@ -76,7 +78,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleAuthorityDoesNotExistException(AuthorityDoesNotExistException ex){
         ProblemDetail body = ProblemDetail
                 .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
-        body.setTitle("Authority not found");
+        body.setTitle("Authority not Found");
         body.setProperty("hostname", "localhost");
         return body;
     }
@@ -115,6 +117,15 @@ public class GlobalExceptionHandler {
         ProblemDetail body = ProblemDetail
                 .forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getLocalizedMessage());
         body.setTitle("Bad sortBy Parameter");
+        body.setProperty("hostname", "localhost");
+        return body;
+    }
+
+    @ExceptionHandler(PaymentStripePriceDoesNotExistException.class)
+    public ProblemDetail handlePaymentStripePriceDoesNotExistException(PaymentStripePriceDoesNotExistException ex){
+        ProblemDetail body = ProblemDetail
+                .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getLocalizedMessage());
+        body.setTitle("Payment Stripe Price Not Found");
         body.setProperty("hostname", "localhost");
         return body;
     }
