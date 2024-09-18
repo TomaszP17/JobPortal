@@ -4,7 +4,10 @@ import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +15,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "payment")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +29,7 @@ public class Payment {
     @Column(name = "amount", precision = 7, scale = 2, nullable = false)
     private BigDecimal amount;
 
+    @Builder.Default
     @Column(name = "purchase_date", nullable = false)
     private LocalDateTime purchaseDate = LocalDateTime.now();
 

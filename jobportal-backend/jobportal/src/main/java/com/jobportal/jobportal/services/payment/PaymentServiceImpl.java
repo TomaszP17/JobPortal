@@ -6,6 +6,7 @@ import com.jobportal.jobportal.entities.PaymentStripePrice;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.enums.PaymentStatus;
+import com.jobportal.jobportal.enums.StripeSubscriptionDuration;
 import com.jobportal.jobportal.exceptions.offer.OfferDoesNotExistsException;
 import com.jobportal.jobportal.exceptions.payment.PaymentStripePriceDoesNotExistException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
@@ -18,8 +19,14 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -44,7 +51,10 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentStripePriceRepository = paymentStripePriceRepository;
     }
 
+    @Override
     public String createPayment(CreatePaymentRequestDTO createPaymentRequestDTO) throws StripeException {
+
+        System.out.println(createPaymentRequestDTO.stripeSubscriptionDuration());
 
         Company company = companyRepository
                 .findById(createPaymentRequestDTO.companyId())
@@ -55,8 +65,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new OfferDoesNotExistsException("Offer with id: " + createPaymentRequestDTO.offerId() + " does not exist."));
 
         PaymentStripePrice paymentStripePrice = paymentStripePriceRepository
-                .findById(createPaymentRequestDTO.priceId())
-                .orElseThrow(() -> new PaymentStripePriceDoesNotExistException("PaymentStripePrice with id: " + createPaymentRequestDTO.priceId() + " does not exists"));
+                .findById(createPaymentRequestDTO.stripeSubscriptionDuration())
+                .orElseThrow(() -> new PaymentStripePriceDoesNotExistException("PaymentStripePrice with id: " + createPaymentRequestDTO.stripeSubscriptionDuration() + " does not exists"));
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
@@ -71,16 +81,18 @@ public class PaymentServiceImpl implements PaymentService {
 
         Session session = Session.create(params);
 
-        Payment payment = new Payment();
-        payment.setSessionId(session.getId());
-        payment.setAmount(Price.retrieve(paymentStripePrice.getStripePriceId()).getUnitAmountDecimal());
-        payment.setStatus(PaymentStatus.PENDING);
-        payment.setCompany(company);
-        payment.setOffer(offer);
+        // mozliwe ze amount mozna pobierac inaczej
+        Payment payment = Payment.builder()
+                .sessionId(session.getId())
+                .status(PaymentStatus.PENDING)
+                .amount(Price.retrieve(paymentStripePrice.getStripePriceId()).getUnitAmountDecimal())
+                .paymentStripePrice(paymentStripePrice)
+                .company(company)
+                .offer(offer)
+                .build();
         paymentRepository.save(payment);
-
-
 
         return session.getUrl();
     }
 }
+
