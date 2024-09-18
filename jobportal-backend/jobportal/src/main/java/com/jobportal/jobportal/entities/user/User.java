@@ -44,11 +44,11 @@ public abstract class User {
     private String password;
 
     @URL
-    @Column(name = "github_link", length = 255)
+    @Column(name = "github_link")
     private String githubLink;
 
     @URL
-    @Column(name = "linkedin_link", length = 255)
+    @Column(name = "linkedin_link")
     private String linkedinLink;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
