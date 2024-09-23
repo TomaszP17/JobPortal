@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.*;
@@ -22,9 +24,11 @@ import static org.springframework.security.config.Customizer.*;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final RsaKeyProperties rsaKeys;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, RsaKeyProperties rsaKeys) {
         this.customUserDetailsService = customUserDetailsService;
+        this.rsaKeys = rsaKeys;
     }
 
     @Bean
@@ -53,5 +57,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 }
