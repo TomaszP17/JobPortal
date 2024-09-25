@@ -2,6 +2,7 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.offer.SimilarOfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.services.offer.OfferService;
 import com.jobportal.jobportal.services.offer.SimilarOffer;
@@ -53,12 +54,11 @@ public class OfferController {
     public List<Offer> getOffersByLocalization(
             @RequestParam(required = false) String localization
     ){
-
         return null;
     }
 
     @GetMapping("/similar-offers")
-    public ResponseEntity<List<OfferResponseDTO>> getSimilarOffers(long offerId, int offerCount){
+    public ResponseEntity<List<SimilarOfferResponseDTO>> getSimilarOffers(@RequestParam long offerId,@RequestParam int offerCount){
         return new ResponseEntity<>(similarOffer.getSimilarOffers(offerId, offerCount), HttpStatus.OK);
     }
 }

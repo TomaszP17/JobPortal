@@ -1,46 +1,37 @@
 package com.jobportal.jobportal.services.offer;
 
-import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
-import com.jobportal.jobportal.entities.offer.Offer;
-import com.jobportal.jobportal.exceptions.offer.OfferDoesNotExistsException;
+import com.jobportal.jobportal.dtos.offer.SimilarOfferResponseDTO;
 import com.jobportal.jobportal.repositories.OfferRepository;
-import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-public class SimilarOfferImpl implements SimilarOffer{
+public class SimilarOfferImpl implements SimilarOffer {
 
-
-    private OfferRepository offerRepository;
+    private final OfferRepository offerRepository;
 
     public SimilarOfferImpl(OfferRepository offerRepository) {
         this.offerRepository = offerRepository;
     }
 
-    /**
-     * Title - 0.5
-     * Technology - 0.4
-     * Experience - 0.3
-     * Salary Min-Max - 0.2
-     * Localization - 0.1
-     * @param offerId - offer for which we want similar offers
-     * @param offerCount - count of looking offers
-     * @return list of similar offers
-     */
     @Override
-    public List<OfferResponseDTO> getSimilarOffers(long offerId, int offerCount) {
+    public List<SimilarOfferResponseDTO> getSimilarOffers(long offerId, int offerCount) {
+        List<Object[]> results = offerRepository.getSimilarOffersWithDetails(offerId, offerCount);
 
-        Offer offer = offerRepository
-                .findById(offerId)
-                .orElseThrow(() -> new OfferDoesNotExistsException("Offer with that id: {" + offerId + "does not exists"));
-
-
-
-        return null;
+        return results.stream().map(result -> {
+            SimilarOfferResponseDTO dto = new SimilarOfferResponseDTO();
+            dto.setId((Long) result[0]);
+            dto.setTitle((String) result[1]);
+            dto.setExpiryDate((Timestamp) result[2]);
+            dto.setSalaryMin((Integer) result[3]);
+            dto.setSalaryMax((Integer) result[4]);
+            dto.setDescription((String) result[5]);
+            dto.setSimilarityScore((Double) result[6]);
+            return dto;
+        }).collect(Collectors.toList());
     }
-
 }
+
