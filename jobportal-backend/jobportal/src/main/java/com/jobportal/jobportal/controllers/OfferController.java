@@ -4,6 +4,7 @@ import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.services.offer.OfferService;
+import com.jobportal.jobportal.services.offer.SimilarOffer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,11 @@ import java.util.List;
 public class OfferController {
 
     private final OfferService offerService;
+    private final SimilarOffer similarOffer;
 
-    public OfferController(OfferService offerService) {
+    public OfferController(OfferService offerService, SimilarOffer similarOffer) {
         this.offerService = offerService;
+        this.similarOffer = similarOffer;
     }
 
     @GetMapping
@@ -52,5 +55,10 @@ public class OfferController {
     ){
 
         return null;
+    }
+
+    @GetMapping("/similar-offers")
+    public ResponseEntity<List<OfferResponseDTO>> getSimilarOffers(long offerId, int offerCount){
+        return new ResponseEntity<>(similarOffer.getSimilarOffers(offerId, offerCount), HttpStatus.OK);
     }
 }

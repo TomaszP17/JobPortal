@@ -4,6 +4,7 @@ import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.exceptions.offer.OfferDoesNotExistsException;
 import com.jobportal.jobportal.repositories.OfferRepository;
+import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Service
 public class SimilarOfferImpl implements SimilarOffer{
+
 
     private OfferRepository offerRepository;
 
@@ -31,8 +33,6 @@ public class SimilarOfferImpl implements SimilarOffer{
      */
     @Override
     public List<OfferResponseDTO> getSimilarOffers(long offerId, int offerCount) {
-
-        Map<Long, Double> similarOffers = new HashMap<>();
 
         Offer offer = offerRepository
                 .findById(offerId)
