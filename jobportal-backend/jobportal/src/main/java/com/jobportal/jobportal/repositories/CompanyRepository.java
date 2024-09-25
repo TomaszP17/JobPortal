@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
@@ -21,4 +22,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "CASE WHEN :sortBy = 'count' THEN COUNT(o) END DESC, " +
             "CASE WHEN :sortBy = 'average' THEN AVG(o.salaryMax) END DESC")
     List<CompanyResponseOfferStatsDTO> findCompaniesWithOfferStats(@Param("sortBy") String sortBy, Pageable pageable);
+
+    Optional<Company> findByEmail(String email);
 }
