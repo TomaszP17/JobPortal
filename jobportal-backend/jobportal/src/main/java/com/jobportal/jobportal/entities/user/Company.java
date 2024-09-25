@@ -22,7 +22,7 @@ public class Company extends User {
     private String name;
 
     @Pattern(regexp = "^\\d{10}$", message = "NIP must be 10 digits long")
-    @Column(name = "nip", nullable = false, unique = true)
+    @Column(name = "nip", unique = true)
     private String nip;
 
     @Min(1)

@@ -7,6 +7,7 @@ import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.repositories.RefreshTokenRepository;
 import com.jobportal.jobportal.repositories.UserRepository;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.beans.Encoder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -25,13 +27,11 @@ public class TokenServiceImpl implements TokenService{
     private final JwtEncoder encoder;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final CustomUserDetailsService customUserDetailsService;
 
-    public TokenServiceImpl(JwtEncoder encoder, UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, CustomUserDetailsService customUserDetailsService) {
+    public TokenServiceImpl(JwtEncoder encoder, UserRepository userRepository, RefreshTokenRepository refreshTokenRepository) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
-        this.customUserDetailsService = customUserDetailsService;
     }
 
     public GenerateTokensDTO generateToken(Authentication authentication) {
