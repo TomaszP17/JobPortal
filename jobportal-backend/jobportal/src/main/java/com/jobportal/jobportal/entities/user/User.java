@@ -41,7 +41,7 @@ public abstract class User {
     private String email;
 
     @Column(name = "password")
-    private String password;
+    private String password = "tomaszpSigma";
 
     @URL
     @Column(name = "github_link")
@@ -51,12 +51,14 @@ public abstract class User {
     @Column(name = "linkedin_link")
     private String linkedinLink;
 
-    @Column(name = "is_completed")
+    @Column(name = "is_completed", nullable = false)
     private Boolean isCompleted = Boolean.TRUE;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserAuthority> userAuthority = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserFavouriteOffer> userFavouriteOffers = new HashSet<>();
 

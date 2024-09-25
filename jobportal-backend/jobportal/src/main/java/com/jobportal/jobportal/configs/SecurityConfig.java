@@ -52,6 +52,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -59,7 +60,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/api/auth/refresh",
                                 "/api/auth/logout",
-                                "/api/auth/login"
+                                "/api/auth/login",
+                                "api/candidates"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
