@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.configs;
 
+import com.jobportal.jobportal.handlers.OAuth2AuthenticationSuccessHandler;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -31,10 +32,12 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final RsaKeyProperties rsaKeys;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, RsaKeyProperties rsaKeys) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, RsaKeyProperties rsaKeys, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
         this.customUserDetailsService = customUserDetailsService;
         this.rsaKeys = rsaKeys;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
     @Bean
@@ -60,7 +63,10 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(withDefaults())
+                //http://localhost:8080/oauth2/authorization/google
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(withDefaults())

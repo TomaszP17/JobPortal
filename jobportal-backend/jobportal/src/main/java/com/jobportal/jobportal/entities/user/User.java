@@ -40,7 +40,7 @@ public abstract class User {
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @URL
@@ -50,6 +50,9 @@ public abstract class User {
     @URL
     @Column(name = "linkedin_link")
     private String linkedinLink;
+
+    @Column(name = "is_completed")
+    private Boolean isCompleted = Boolean.TRUE;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserAuthority> userAuthority = new HashSet<>();

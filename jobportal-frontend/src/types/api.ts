@@ -9,38 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface UpdateCandidateRequestDTO {
-  /**
-   * @minLength 1
-   * @maxLength 50
-   * @pattern ^[a-zA-Zà-žÀ-Ž'\- ]+$
-   */
-  firstName?: string;
-  /**
-   * @minLength 1
-   * @maxLength 50
-   * @pattern ^[a-zA-Zà-žÀ-Ž'\- ]+$
-   */
-  lastName?: string;
-  /**
-   * @format int32
-   * @min 0
-   * @max 50
-   */
-  experienceYears?: number;
-  githubLink?: string;
-  linkedinLink?: string;
-}
-
-export interface UpdateCandidateResponseDTO {
-  firstName?: string;
-  lastName?: string;
-  /** @format int32 */
-  experienceYears?: number;
-  githubLink?: string;
-  linkedinLink?: string;
-}
-
 export interface WorkTypeCreateRequestDTO {
   /**
    * @minLength 0
@@ -55,6 +23,21 @@ export interface TechnologyCreateRequestDTO {
    * @maxLength 50
    */
   name: string;
+}
+
+export interface CreatePaymentRequestDTO {
+  /** @format int64 */
+  companyId: number;
+  /** @format int64 */
+  offerId: number;
+  stripeSubscriptionDuration: "ONE_WEEK" | "ONE_MONTH" | "SIX_MONTHS";
+}
+
+export interface LocalizationCreateRequestDTO {
+  street?: string;
+  /** @format int64 */
+  buildingNumber?: number;
+  city?: string;
 }
 
 export interface OfferCreateRequestDTO {
@@ -78,6 +61,7 @@ export interface OfferCreateRequestDTO {
   employmentType?: number[];
   /** @uniqueItems true */
   workTypes?: number[];
+  requestDTO?: LocalizationCreateRequestDTO;
 }
 
 export interface ExperienceCreateRequestDTO {
@@ -135,11 +119,21 @@ export interface CreateCandidateRequestDTO {
   password: string;
 }
 
+export interface RefreshTokenDTO {
+  refreshToken?: string;
+}
+
+export interface GenerateTokensDTO {
+  accessToken?: string;
+  refreshToken?: string;
+}
+
 export interface CreateApplicationRequestDTO {
   /** @format int64 */
   candidateId?: number;
   /** @format int64 */
   offerId: number;
+  pdf?: string[];
 }
 
 export interface CreateAdminRequestDTO {
@@ -181,6 +175,7 @@ export interface Company {
   password?: string;
   githubLink?: string;
   linkedinLink?: string;
+  isCompleted?: boolean;
   name?: string;
   /** @pattern ^\d{10}$ */
   nip?: string;
@@ -290,11 +285,21 @@ export interface OfferWorkType {
 export interface Payment {
   /** @format int64 */
   id?: number;
-  offer?: Offer;
-  company?: Company;
+  sessionId?: string;
   amount?: number;
   /** @format date-time */
   purchaseDate?: string;
+  status?: "PENDING" | "CANCELED" | "PAID";
+  offer?: Offer;
+  company?: Company;
+  paymentStripePrice?: PaymentStripePrice;
+}
+
+export interface PaymentStripePrice {
+  stripeSubscriptionDuration?: "ONE_WEEK" | "ONE_MONTH" | "SIX_MONTHS";
+  stripePriceId?: string;
+  /** @uniqueItems true */
+  payments?: Payment[];
 }
 
 export interface Technology {
@@ -315,6 +320,7 @@ export interface User {
   password?: string;
   githubLink?: string;
   linkedinLink?: string;
+  isCompleted?: boolean;
   /** @uniqueItems true */
   userAuthority?: UserAuthority[];
   /** @uniqueItems true */
@@ -374,6 +380,13 @@ export interface NewsResponseDTO {
   /** @format int32 */
   totalResults?: number;
   articles?: ArticleDTO[];
+}
+
+export interface CoordinatesDTO {
+  /** @format double */
+  lat?: number;
+  /** @format double */
+  lng?: number;
 }
 
 export interface ExperienceResponseDTO {
@@ -639,44 +652,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags candidate-controller
-     * @name GetCandidateById
-     * @request GET:/api/candidates/{id}
-     */
-    getCandidateById: (id: number, params: RequestParams = {}) =>
-      this.request<CandidateResponseDTO, any>({
-        path: `/api/candidates/${id}`,
-        method: "GET",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags candidate-controller
-     * @name UpdateCandidate
-     * @request PUT:/api/candidates/{id}
-     */
-    updateCandidate: (
-      id: number,
-      data: {
-        /** @format binary */
-        file: File;
-        updateCandidateRequestDTO: UpdateCandidateRequestDTO;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateCandidateResponseDTO, any>({
-        path: `/api/candidates/${id}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.FormData,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags work-type-controller
      * @name GetAllWorkTypes
      * @request GET:/api/work-types
@@ -698,6 +673,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     addWorkType: (data: WorkTypeCreateRequestDTO, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/work-types`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stripe-webhook-controller
+     * @name HandleWebhook
+     * @request POST:/api/webhook
+     */
+    handleWebhook: (data: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/webhook`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -764,6 +755,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     addTechnology: (data: TechnologyCreateRequestDTO, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/technologies`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags payment-controller
+     * @name CreateCheckoutSession
+     * @request POST:/api/payments/create-session
+     */
+    createCheckoutSession: (data: CreatePaymentRequestDTO, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/payments/create-session`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -924,6 +931,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth-controller
+     * @name Refresh
+     * @request POST:/api/auth/refresh
+     */
+    refresh: (data: RefreshTokenDTO, params: RequestParams = {}) =>
+      this.request<GenerateTokensDTO, any>({
+        path: `/api/auth/refresh`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth-controller
+     * @name Logout
+     * @request POST:/api/auth/logout
+     */
+    logout: (data: RefreshTokenDTO, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/logout`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth-controller
+     * @name Login
+     * @request POST:/api/auth/login
+     */
+    login: (params: RequestParams = {}) =>
+      this.request<GenerateTokensDTO, any>({
+        path: `/api/auth/login`,
+        method: "POST",
         ...params,
       }),
 
@@ -1156,6 +1209,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags geocoding-controller
+     * @name GetCoordinates
+     * @request GET:/api/geocoding
+     */
+    getCoordinates: (
+      query: {
+        address: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CoordinatesDTO, any>({
+        path: `/api/geocoding`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags experience-controller
      * @name GetExperience
      * @request GET:/api/experiences/{experienceId}
@@ -1251,6 +1324,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/companies/top-companies`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags candidate-controller
+     * @name GetCandidateById
+     * @request GET:/api/candidates/{id}
+     */
+    getCandidateById: (id: number, params: RequestParams = {}) =>
+      this.request<CandidateResponseDTO, any>({
+        path: `/api/candidates/${id}`,
+        method: "GET",
         ...params,
       }),
 

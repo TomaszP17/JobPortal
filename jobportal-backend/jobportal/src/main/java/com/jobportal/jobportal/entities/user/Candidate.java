@@ -16,7 +16,7 @@ public class Candidate extends User {
     private String firstName;
 
     @Length(max = 100)
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "experience_years", nullable = false)

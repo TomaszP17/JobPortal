@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public GenerateTokensDTO refreshToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token")); // create exception here
+                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(refreshToken);
