@@ -2,6 +2,7 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
 import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
+import com.jobportal.jobportal.dtos.auth.LoginRequestDTO;
 import com.jobportal.jobportal.dtos.auth.RefreshTokenDTO;
 import com.jobportal.jobportal.services.auth.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(HttpServletResponse httpServletResponse, Authentication authentication) {
-        CookiesTokensDTO cookiesTokensDTO = authService.authenticate(authentication);
+    public ResponseEntity<String> login(HttpServletResponse httpServletResponse, @RequestBody LoginRequestDTO loginRequestDTO) {
+        CookiesTokensDTO cookiesTokensDTO = authService.authenticate(loginRequestDTO);
         httpServletResponse.addCookie(cookiesTokensDTO.accessTokenCookie());
         httpServletResponse.addCookie(cookiesTokensDTO.refreshTokenCookie());
         return new ResponseEntity<>("logged in successfully", HttpStatus.CREATED);

@@ -29,6 +29,7 @@ public class JwtCookiesHelpers {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
+        cookie.setAttribute("SameSite", "Strict");
         return cookie;
     }
 }
