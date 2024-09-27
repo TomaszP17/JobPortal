@@ -60,7 +60,6 @@ export function RegistrationForm() {
     };
 
     const handleGoogleSignIn = () => {
-        // Handle Google sign-in logic here
     };
 
     return (
