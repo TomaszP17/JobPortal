@@ -36,17 +36,29 @@ public class TokenServiceImpl implements TokenService{
 
     public GenerateTokensDTO generateToken(Authentication authentication) {
         Instant now = Instant.now();
+        System.out.println(authentication);
+        System.out.println("auth-role: " + authentication.getAuthorities());
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
-        System.out.println(scope);
+
+        System.out.println("scope: " + scope);
+
+        User user = userRepository
+                .findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserDoesNotExistException("User with email " + authentication.getName() + " does not exist"));
+
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("email", user.getEmail()) // someday add also name passing for company and candidate
                 .build();
+
+
         String accessToken =  this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
         String refreshToken = UUID.randomUUID().toString();

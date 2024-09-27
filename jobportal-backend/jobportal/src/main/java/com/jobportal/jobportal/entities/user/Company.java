@@ -18,7 +18,7 @@ import java.util.Set;
 public class Company extends User {
 
     @Length(max = 100)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Pattern(regexp = "^\\d{10}$", message = "NIP must be 10 digits long")
@@ -33,5 +33,5 @@ public class Company extends User {
     private Set<Payment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Offer> offers;
+    private Set<Offer> offers = new HashSet<>();
 }

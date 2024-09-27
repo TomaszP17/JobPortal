@@ -45,7 +45,7 @@ public class CandidateServiceImpl implements CandidateService{
         Candidate candidate = userMapper.toCandidateFromCreateRequest(createCandidateRequestDTO, passwordEncoder);
         candidate = candidateRepository.save(candidate);
 
-        Authority authority = authorityRepository.findByName("CANDIDATE");
+        Authority authority = authorityRepository.findByName("ROLE_CANDIDATE");
 
         if (authority == null){
             throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
@@ -91,5 +91,31 @@ public class CandidateServiceImpl implements CandidateService{
         }
 
         return userMapper.toUpdateResponseFromCandidate(candidateRepository.save(candidate));
+    }
+
+
+    @Override
+    public Candidate createCandidateFromOAuth(String email) {
+
+        Candidate candidate = Candidate.builder()
+                .email(email)
+                .build();
+
+        candidate = candidateRepository.save(candidate);
+
+        Authority authority = authorityRepository.findByName("ROLE_CANDIDATE");
+
+        if (authority == null){
+            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+        }
+
+        UserAuthority userAuthority = UserAuthority.builder()
+                .user(candidate)
+                .authority(authority)
+                .build();
+
+        userAuthorityRepository.save(userAuthority);
+
+        return candidate;
     }
 }
