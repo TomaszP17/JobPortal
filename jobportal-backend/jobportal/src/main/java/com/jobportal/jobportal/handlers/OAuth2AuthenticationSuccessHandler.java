@@ -8,7 +8,9 @@ import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.repositories.CandidateRepository;
 import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.services.candidate.CandidateService;
+import com.jobportal.jobportal.services.company.CompanyService;
 import com.jobportal.jobportal.services.token.TokenService;
+import com.jobportal.jobportal.services.user.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +37,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final CompanyRepository companyRepository;
     private final CandidateService candidateService;
     private final JwtCookiesHelpers jwtCookiesHelpers;
+    private final CompanyService companyService;
 
     @Value("${jobportal.frontend.url}")
     private String frontendUrl;
@@ -44,12 +47,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             CandidateRepository candidateRepository,
             CompanyRepository companyRepository,
             @Lazy CandidateService candidateService,
-            JwtCookiesHelpers jwtCookiesHelpers) {
+            @Lazy CompanyService companyService,
+            JwtCookiesHelpers jwtCookiesHelpers, CompanyService companyService1) {
         this.tokenService = tokenService;
         this.candidateRepository = candidateRepository;
         this.companyRepository = companyRepository;
         this.candidateService = candidateService;
         this.jwtCookiesHelpers = jwtCookiesHelpers;
+        this.companyService = companyService1;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
-    ) throws IOException, ServletException {
+    ) throws IOException {
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
@@ -81,20 +86,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
             setCookiesAndRedirect(response, newAuth, false);
         } else {
-            User newUser = isCandidate ? candidateService.createCandidateFromOAuth(email) : createCompany(email, name);
+            User newUser = isCandidate ? candidateService.createCandidateFromOAuth(email) : companyService.createCompanyFromOAuth(email);
             Authentication newAuth = new UsernamePasswordAuthenticationToken(newUser.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
             setCookiesAndRedirect(response, newAuth, true);
         }
     }
 
-    private Company createCompany(String email, String name) {
-        Company newCompany = new Company();
-        newCompany.setEmail(email);
-        newCompany.setName(name);
-        newCompany.setIsCompleted(false);
-        companyRepository.save(newCompany);
-        return newCompany;
-    }
 
     private void setCookiesAndRedirect(HttpServletResponse response, Authentication authentication, boolean requiresAdditionalInfo) throws IOException {
         CookiesTokensDTO tokens = jwtCookiesHelpers.createAuthCookies(tokenService.generateToken(authentication));
