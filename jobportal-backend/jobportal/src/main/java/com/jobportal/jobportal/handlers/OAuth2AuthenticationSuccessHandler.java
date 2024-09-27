@@ -1,8 +1,6 @@
 package com.jobportal.jobportal.handlers;
 
 import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
-import com.jobportal.jobportal.entities.user.Candidate;
-import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.User;
 import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.repositories.CandidateRepository;
@@ -10,15 +8,12 @@ import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.services.candidate.CandidateService;
 import com.jobportal.jobportal.services.company.CompanyService;
 import com.jobportal.jobportal.services.token.TokenService;
-import com.jobportal.jobportal.services.user.UserService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
