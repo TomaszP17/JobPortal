@@ -1,8 +1,10 @@
 package com.jobportal.jobportal.services.auth;
 
+import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
 import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
 import com.jobportal.jobportal.entities.RefreshToken;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.repositories.RefreshTokenRepository;
 import com.jobportal.jobportal.services.token.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,25 +19,27 @@ public class AuthServiceImpl implements AuthService {
 
     private final TokenService tokenService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtCookiesHelpers jwtCookiesHelpers;
 
-    public AuthServiceImpl(TokenService tokenService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthServiceImpl(TokenService tokenService, RefreshTokenRepository refreshTokenRepository, JwtCookiesHelpers jwtCookiesHelpers) {
         this.tokenService = tokenService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtCookiesHelpers = jwtCookiesHelpers;
     }
 
     @Override
-    public GenerateTokensDTO authenticate(Authentication authentication) {
-        return tokenService.generateToken(authentication);
+    public CookiesTokensDTO authenticate(Authentication authentication) {
+        return jwtCookiesHelpers.createAuthCookies(tokenService.generateToken(authentication));
     }
 
     @Override
-    public GenerateTokensDTO refreshToken(String refreshTokenValue) {
+    public CookiesTokensDTO refreshToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(refreshToken);
-            throw new IllegalArgumentException("Refresh token expired");
+            throw new IllegalArgumentException("Refresh token expired"); // change exception
         }
 
         User user = refreshToken.getUser();
@@ -43,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(user.getEmail(), null);
 
-       GenerateTokensDTO tokens = tokenService.generateToken(authentication);
+       CookiesTokensDTO tokens = jwtCookiesHelpers.createAuthCookies(tokenService.generateToken(authentication));
 
         refreshTokenRepository.delete(refreshToken);
 
