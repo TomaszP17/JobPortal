@@ -1,8 +1,10 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
 import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
 import com.jobportal.jobportal.dtos.auth.RefreshTokenDTO;
 import com.jobportal.jobportal.services.auth.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,26 +20,26 @@ public class AuthController {
 
     private final AuthService authService;
 
-
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<GenerateTokensDTO> login(Authentication authentication) {
-        LOG.debug("Token requested for user: '{}'", authentication.getName());
-        GenerateTokensDTO tokens = authService.authenticate(authentication);
-        LOG.debug("Token granted: {}", tokens);
-        return new ResponseEntity<>(tokens, HttpStatus.CREATED);
+    public ResponseEntity<String> login(HttpServletResponse httpServletResponse, Authentication authentication) {
+        CookiesTokensDTO cookiesTokensDTO = authService.authenticate(authentication);
+        httpServletResponse.addCookie(cookiesTokensDTO.accessTokenCookie());
+        httpServletResponse.addCookie(cookiesTokensDTO.refreshTokenCookie());
+        return new ResponseEntity<>("logged in successfully", HttpStatus.CREATED);
     }
 
     //todo responseentity<>
     @PostMapping("/refresh")
-    public ResponseEntity<GenerateTokensDTO> refresh(@RequestBody RefreshTokenDTO refreshTokenDTO) {
-        LOG.debug("Refresh token requested");
-        GenerateTokensDTO tokens = authService.refreshToken(refreshTokenDTO.refreshToken());
-        LOG.debug("Tokens refreshed");
-        return new ResponseEntity<>(tokens, HttpStatus.CREATED);
+    public ResponseEntity<String> refresh(HttpServletResponse httpServletResponse,@RequestBody RefreshTokenDTO refreshTokenDTO) {
+        CookiesTokensDTO CookiesTokensDTO = authService.refreshToken(refreshTokenDTO.refreshToken());
+        httpServletResponse.addCookie(CookiesTokensDTO.accessTokenCookie());
+        httpServletResponse.addCookie(CookiesTokensDTO.refreshTokenCookie());
+
+        return new ResponseEntity<>("user's tokens have been refreshed", HttpStatus.CREATED);
     }
 
     @PostMapping("/logout")

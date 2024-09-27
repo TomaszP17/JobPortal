@@ -93,7 +93,7 @@ public class CandidateServiceImpl implements CandidateService{
         return userMapper.toUpdateResponseFromCandidate(candidateRepository.save(candidate));
     }
 
-
+    @Transactional
     @Override
     public Candidate createCandidateFromOAuth(String email) {
 
@@ -106,7 +106,7 @@ public class CandidateServiceImpl implements CandidateService{
         Authority authority = authorityRepository.findByName("ROLE_CANDIDATE");
 
         if (authority == null){
-            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+            throw new AuthorityDoesNotExistException("The authority named: ROLE_CANDIDATE does not exist");
         }
 
         UserAuthority userAuthority = UserAuthority.builder()

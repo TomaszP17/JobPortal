@@ -5,7 +5,10 @@ import com.jobportal.jobportal.entities.offer.Offer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.HashSet;
@@ -14,6 +17,9 @@ import java.util.Set;
 @Entity
 @Table(name = "company_user")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @DiscriminatorValue("COMPANY")
 public class Company extends User {
 

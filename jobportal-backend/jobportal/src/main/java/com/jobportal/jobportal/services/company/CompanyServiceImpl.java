@@ -5,6 +5,7 @@ import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.entities.user.Authority;
+import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
@@ -77,4 +78,31 @@ public class CompanyServiceImpl implements CompanyService{
         Pageable pageable = PageRequest.of(page, size);
         return companyRepository.findCompaniesWithOfferStats(sortBy, pageable);
     }
+
+    @Transactional
+    @Override
+    public Company createCompanyFromOAuth(String email) {
+        Company company = Company.builder()
+                .email(email)
+                .build();
+
+        company = companyRepository.save(company);
+
+        Authority authority = authorityRepository.findByName("ROLE_COMPANY");
+
+        if (authority == null){
+            throw new AuthorityDoesNotExistException("The authority named: ROLE_COMPANY does not exist");
+        }
+
+        UserAuthority userAuthority = UserAuthority.builder()
+                .user(company)
+                .authority(authority)
+                .build();
+
+        userAuthorityRepository.save(userAuthority);
+
+        return company;
+    }
+
+
 }
