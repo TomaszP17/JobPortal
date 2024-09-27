@@ -123,9 +123,9 @@ export interface RefreshTokenDTO {
   refreshToken?: string;
 }
 
-export interface GenerateTokensDTO {
-  accessToken?: string;
-  refreshToken?: string;
+export interface LoginRequestDTO {
+  email?: string;
+  password?: string;
 }
 
 export interface CreateApplicationRequestDTO {
@@ -942,7 +942,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/auth/refresh
      */
     refresh: (data: RefreshTokenDTO, params: RequestParams = {}) =>
-      this.request<GenerateTokensDTO, any>({
+      this.request<string, any>({
         path: `/api/auth/refresh`,
         method: "POST",
         body: data,
@@ -973,10 +973,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Login
      * @request POST:/api/auth/login
      */
-    login: (params: RequestParams = {}) =>
-      this.request<GenerateTokensDTO, any>({
+    login: (data: LoginRequestDTO, params: RequestParams = {}) =>
+      this.request<string, any>({
         path: `/api/auth/login`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 

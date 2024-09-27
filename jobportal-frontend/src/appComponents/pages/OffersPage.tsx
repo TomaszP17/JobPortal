@@ -13,7 +13,9 @@ export const OffersPage: React.FC = () => {
             try {
                 const apiClient = new Api();
                 const response = await apiClient.api.getOffers();
-                setOffers(response.data);
+                const data = await response.json();
+                console.log(data);
+                setOffers(data);
                 setIsLoading(false);
             } catch (err) {
                 setError('Failed to fetch offers');

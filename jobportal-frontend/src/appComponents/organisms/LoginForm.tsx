@@ -4,14 +4,34 @@ import * as React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { InputField } from "../atoms/InputField"
 import { Button } from "../atoms/Button"
+import {useState} from "react";
+import {Api, type LoginRequestDTO} from "@/types/api.ts";
 
 export function LoginForm() {
-    const [email, setEmail] = React.useState("")
-    const [password, setPassword] = React.useState("")
+    const [loginForm, setLoginForm] = useState<LoginRequestDTO>({
+        "email": "",
+        "password": "",
+    })
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const apiClient = new Api();
+
+    const handleFormInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {id, value} = event.target;
+        setLoginForm((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
     }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            await apiClient.api.login(loginForm);
+        } catch (error) {
+            console.error("Error logging in:", error);
+            alert("Failed to log in.");
+        }
+    };
 
     const handleGoogleSignIn = () => {
     }
@@ -29,8 +49,8 @@ export function LoginForm() {
                         label="Email"
                         type="email"
                         placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={loginForm.email || ""}
+                        onChange={handleFormInputChange}
                         required
                     />
                     <InputField
@@ -38,8 +58,8 @@ export function LoginForm() {
                         label="Password"
                         type="password"
                         placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={loginForm.password || ""}
+                        onChange={handleFormInputChange}
                         required
                     />
                     <Button type="submit">Log In</Button>
