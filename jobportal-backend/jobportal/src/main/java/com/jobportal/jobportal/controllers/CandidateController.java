@@ -3,11 +3,10 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
-import com.jobportal.jobportal.dtos.candidate.CreateCandidateResponseDTO;
 import com.jobportal.jobportal.services.candidate.CandidateService;
-import com.jobportal.jobportal.services.candidate.CandidateServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +38,11 @@ public class CandidateController {
         return new ResponseEntity<>(candidateService.getAllCandidates(), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editCandidate(@PathVariable Long id, @Valid @RequestBody CreateCandidateRequestDTO candidateRequestDTO){
+        candidateService.editCandidate(id, candidateRequestDTO);
+        return new ResponseEntity<>("Candidate Updated Successfully!", HttpStatus.NO_CONTENT);
+    }
     //todo: add deleteMapping
+
 }

@@ -15,4 +15,5 @@ public interface CompanyService {
     List<CompanyResponseDTO> getAllCompanies();
     List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size);
     Company createCompanyFromOAuth(String email);
+    void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO);
 }

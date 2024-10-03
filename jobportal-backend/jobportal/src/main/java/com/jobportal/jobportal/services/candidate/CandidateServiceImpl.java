@@ -76,23 +76,19 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Transactional
     @Override
-    public UpdateCandidateResponseDTO updateCandidate(Long id, MultipartFile pdf, UpdateCandidateRequestDTO updateCandidateRequestDTO) {
-
-        Candidate candidate = candidateRepository.findById(id)
+    public void editCandidate(Long id, CreateCandidateRequestDTO candidateRequestDTO) {
+        Candidate existingCandidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new UserDoesNotExistException("Candidate with id: " + id + " does not exist"));
 
-        userMapper.updateCandidate(updateCandidateRequestDTO, candidate);
+        System.err.println("Found candidate: " + existingCandidate);
 
-        if(pdf != null){
-            if(candidate.getPdf() != null){
-                candidate.setPdf(null);
-            }
-            candidate.setPdf(pdfService.uploadPdf(pdf, candidate.getFirstName() + "_" + candidate.getLastName()));
-        }
+        userMapper.updateCandidateFromCreateRequest(candidateRequestDTO, existingCandidate, passwordEncoder);
 
-        return userMapper.toUpdateResponseFromCandidate(candidateRepository.save(candidate));
+        System.err.println("Edited candidate: " + existingCandidate);
+        candidateRepository.save(existingCandidate);
+
     }
-
+  
     @Transactional
     @Override
     public Candidate createCandidateFromOAuth(String email) {
