@@ -43,6 +43,4 @@ public class CandidateController {
         candidateService.editCandidate(id, candidateRequestDTO);
         return new ResponseEntity<>("Candidate Updated Successfully!", HttpStatus.NO_CONTENT);
     }
-    //todo: add deleteMapping
-
 }
