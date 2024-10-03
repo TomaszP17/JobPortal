@@ -25,7 +25,7 @@ public class JwtCookiesHelpers {
 
     private static Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true); // secure cookie
+        cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -62,7 +63,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
-        String userType = "candidate";
+        String userType = request.getParameter("state");
+        System.out.println("State: " + userType);
 
         if ("candidate".equals(userType)) {
             handleAuthenticationForUserType(response, email, name, "ROLE_CANDIDATE", candidateRepository.findByEmail(email), true);
@@ -79,10 +81,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
             setCookiesAndRedirect(response, newAuth, false);
         } else {
             User newUser = isCandidate ? candidateService.createCandidateFromOAuth(email) : companyService.createCompanyFromOAuth(email);
             Authentication newAuth = new UsernamePasswordAuthenticationToken(newUser.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
             setCookiesAndRedirect(response, newAuth, true);
         }
     }
