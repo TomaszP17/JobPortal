@@ -10,8 +10,8 @@ public interface CandidateService {
     CreateCandidateResponseDTO createCandidate(CreateCandidateRequestDTO createCandidateRequestDTO);
     CandidateResponseDTO getCandidateById(Long id);
     List<CandidateResponseDTO> getAllCandidates();
-    UpdateCandidateResponseDTO updateCandidate(Long id,
+    /*UpdateCandidateResponseDTO updateCandidate(Long id,
                                                MultipartFile pdf,
-                                               UpdateCandidateRequestDTO updateCandidateRequestDTO);
-
+                                               UpdateCandidateRequestDTO updateCandidateRequestDTO);*/
+    void editCandidate(Long id, CreateCandidateRequestDTO candidateRequestDTO);
 }

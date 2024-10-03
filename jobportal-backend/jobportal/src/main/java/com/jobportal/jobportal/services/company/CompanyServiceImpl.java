@@ -77,4 +77,14 @@ public class CompanyServiceImpl implements CompanyService{
         Pageable pageable = PageRequest.of(page, size);
         return companyRepository.findCompaniesWithOfferStats(sortBy, pageable);
     }
+
+    @Override
+    public void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new UserDoesNotExistException("Company with id: " + id + " does not exist"));
+
+        userMapper.updateCompanyFromCreateRequest(createCompanyRequestDTO, company, passwordEncoder);
+
+        companyRepository.save(company);
+    }
 }
