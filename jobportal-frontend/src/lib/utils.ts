@@ -7,6 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export const storeTokens = (accessToken: string, refreshToken: string): void => {
   localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('refreshToken', refreshToken); // zmienic na cos innego, nie local storage
+  localStorage.setItem('refreshToken', refreshToken);
 };
 

@@ -1,27 +1,28 @@
 package com.jobportal.jobportal.handlers;
 
-import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
-import com.jobportal.jobportal.entities.user.Candidate;
-import com.jobportal.jobportal.entities.user.Company;
+import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.repositories.CandidateRepository;
 import com.jobportal.jobportal.repositories.CompanyRepository;
-import com.jobportal.jobportal.repositories.UserRepository;
+import com.jobportal.jobportal.services.candidate.CandidateService;
+import com.jobportal.jobportal.services.company.CompanyService;
 import com.jobportal.jobportal.services.token.TokenService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -30,6 +31,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final TokenService tokenService;
     private final CandidateRepository candidateRepository;
     private final CompanyRepository companyRepository;
+    private final CandidateService candidateService;
+    private final JwtCookiesHelpers jwtCookiesHelpers;
+    private final CompanyService companyService;
 
     @Value("${jobportal.frontend.url}")
     private String frontendUrl;
@@ -37,10 +41,16 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     public OAuth2AuthenticationSuccessHandler(
             @Lazy TokenService tokenService,
             CandidateRepository candidateRepository,
-            CompanyRepository companyRepository) {
+            CompanyRepository companyRepository,
+            @Lazy CandidateService candidateService,
+            @Lazy CompanyService companyService,
+            JwtCookiesHelpers jwtCookiesHelpers) {
         this.tokenService = tokenService;
         this.candidateRepository = candidateRepository;
         this.companyRepository = companyRepository;
+        this.candidateService = candidateService;
+        this.jwtCookiesHelpers = jwtCookiesHelpers;
+        this.companyService = companyService;
     }
 
     @Override
@@ -48,77 +58,51 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
-    ) throws IOException, ServletException {
-
-        String state = request.getParameter("state");
-        String userType = "candidate";
-
-
+    ) throws IOException {
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
+        String userType = request.getParameter("state");
+        System.out.println("State: " + userType);
+
         if ("candidate".equals(userType)) {
-            Optional<Candidate> candidateOptional = candidateRepository.findByEmail(email);
-
-            if (candidateOptional.isPresent()) {
-                Candidate candidate = candidateOptional.get();
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        candidate.getEmail(), null);
-                GenerateTokensDTO tokens = tokenService.generateToken(newAuth);
-
-                redirectToFrontend(response, tokens, false, userType);
-
-            } else {
-                Candidate newCandidate = new Candidate();
-                newCandidate.setEmail(email);
-                newCandidate.setFirstName(name);
-                newCandidate.setIsCompleted(false);
-                candidateRepository.save(newCandidate);
-
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        newCandidate.getEmail(), null);
-
-                GenerateTokensDTO tokens = tokenService.generateToken(newAuth);
-
-                redirectToFrontend(response, tokens, true, userType);
-            }
+            handleAuthenticationForUserType(response, email, name, "ROLE_CANDIDATE", candidateRepository.findByEmail(email), true);
         } else if ("company".equals(userType)) {
-            Optional<Company> companyOptional = companyRepository.findByEmail(email);
-
-            if (companyOptional.isPresent()) {
-                Company company = companyOptional.get();
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        company.getEmail(), null);
-
-                GenerateTokensDTO tokens = tokenService.generateToken(newAuth);
-
-                redirectToFrontend(response, tokens, false, userType);
-            } else {
-                Company newCompany = new Company();
-                newCompany.setEmail(email);
-                newCompany.setName(name);
-                newCompany.setIsCompleted(false);
-                companyRepository.save(newCompany);
-
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        newCompany.getEmail(), null);
-
-                GenerateTokensDTO tokens = tokenService.generateToken(newAuth);
-
-                redirectToFrontend(response, tokens, true, userType);
-            }
+            handleAuthenticationForUserType(response, email, name, "ROLE_COMPANY", companyRepository.findByEmail(email), false);
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user type");
         }
     }
 
-    private void redirectToFrontend(HttpServletResponse response, GenerateTokensDTO tokens, boolean requiresAdditionalInfo, String userType) throws IOException {
+    private void handleAuthenticationForUserType(HttpServletResponse response, String email, String name, String role,
+                                                 Optional<? extends User> userOptional, boolean isCandidate) throws IOException {
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+            setCookiesAndRedirect(response, newAuth, false);
+        } else {
+            User newUser = isCandidate ? candidateService.createCandidateFromOAuth(email) : companyService.createCompanyFromOAuth(email);
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(newUser.getEmail(), null, List.of(new SimpleGrantedAuthority(role)));
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+            setCookiesAndRedirect(response, newAuth, true);
+        }
+    }
+
+
+    private void setCookiesAndRedirect(HttpServletResponse response, Authentication authentication, boolean requiresAdditionalInfo) throws IOException {
+        CookiesTokensDTO tokens = jwtCookiesHelpers.createAuthCookies(tokenService.generateToken(authentication));
+        response.addCookie(tokens.accessTokenCookie());
+        response.addCookie(tokens.refreshTokenCookie());
+
+        redirectToFrontend(response, requiresAdditionalInfo);
+    }
+
+    private void redirectToFrontend(HttpServletResponse response, boolean requiresAdditionalInfo) throws IOException {
         String redirectUrl = UriComponentsBuilder.fromUriString(frontendUrl + "/oauth2/redirect")
-                .queryParam("accessToken", tokens.accessToken())
-                .queryParam("refreshToken", tokens.refreshToken())
                 .queryParam("requiresAdditionalInfo", requiresAdditionalInfo)
-                .queryParam("userType", userType)
                 .build().toUriString();
 
         response.sendRedirect(redirectUrl);
