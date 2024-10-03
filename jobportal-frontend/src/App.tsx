@@ -7,6 +7,8 @@ import {CompleteProfilePage} from "@/appComponents/pages/CompleteProfilePage.tsx
 import {OAuth2RedirectHandler} from "@/appComponents/molecules/OAuth2RedirectHandler.tsx";
 import {OffersPage} from "@/appComponents/pages/OffersPage.tsx";
 import LoginPage from "@/appComponents/pages/LoginPage.tsx";
+import PageWithNavbarAndFooterLayout from "@/appComponents/layouts/PageWithNavbarAndFooterLayout.tsx";
+import OfferDetailsPage from "@/appComponents/pages/OfferDetailsPage.tsx";
 
 function App() {
 
@@ -19,6 +21,7 @@ function App() {
             <Route path="/complete-profile" element={<CompleteProfilePage/>}/>
             <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
             <Route path="/login" element={<LoginPage/>}/>
+            <Route path={"/offers/:offerId"} element={<OfferDetailsPage/>}/>
         </Routes>
     )
 }

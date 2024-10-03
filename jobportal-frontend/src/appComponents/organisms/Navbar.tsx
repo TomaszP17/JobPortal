@@ -25,8 +25,8 @@ export default function Navbar() {
                         <a href="/services" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                             Services
                         </a>
-                        <a href="/contact" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
-                            Contact
+                        <a href="/profile" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
+                            Profile
                         </a>
                     </div>
                     <div className="sm:hidden flex items-center">
