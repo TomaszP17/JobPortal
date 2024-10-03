@@ -8,11 +8,13 @@ interface OfferCardProps {
     offer: OfferResponseDTO;
 }
 
-export const OfferCard: React.FC<OfferCardProps> = ({ offer }) => (
+export const OfferCard: React.FC<OfferCardProps> = ({offer}) => (
     <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-        <OfferTitle title={offer.title || 'No title'} />
-        <OfferSalary min={offer.salaryMin || 0} max={offer.salaryMax || 0} />
-        <OfferExpiryDate date={offer.expiryDate || ''} />
-        <p className="mt-2 text-gray-700">{offer.description}</p>
+        <a href={`/offers/${offer.id}`}>
+            <OfferTitle title={offer.title || 'No title'}/>
+            <OfferSalary min={offer.salaryMin || 0} max={offer.salaryMax || 0}/>
+            <OfferExpiryDate date={offer.expiryDate || ''}/>
+            <p className="mt-2 text-gray-700">{offer.description}</p>
+        </a>
     </div>
 );

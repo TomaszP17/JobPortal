@@ -61,6 +61,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#2d2827] text-foreground;
+    @apply bg-electricPurple-700;
+  /*(#0F0F0F)*/
   }
 }
