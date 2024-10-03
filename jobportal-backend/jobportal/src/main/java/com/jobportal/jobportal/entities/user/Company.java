@@ -5,7 +5,10 @@ import com.jobportal.jobportal.entities.offer.Offer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.HashSet;
@@ -14,11 +17,14 @@ import java.util.Set;
 @Entity
 @Table(name = "company_user")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @DiscriminatorValue("COMPANY")
 public class Company extends User {
 
     @Length(max = 100)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Pattern(regexp = "^\\d{10}$", message = "NIP must be 10 digits long")
@@ -33,5 +39,5 @@ public class Company extends User {
     private Set<Payment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Offer> offers;
+    private Set<Offer> offers = new HashSet<>();
 }
