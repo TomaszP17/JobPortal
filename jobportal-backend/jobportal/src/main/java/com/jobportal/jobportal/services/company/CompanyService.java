@@ -12,4 +12,5 @@ public interface CompanyService {
     CompanyResponseDTO getCompanyById(Long id);
     List<CompanyResponseDTO> getAllCompanies();
     List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size);
+    void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO);
 }

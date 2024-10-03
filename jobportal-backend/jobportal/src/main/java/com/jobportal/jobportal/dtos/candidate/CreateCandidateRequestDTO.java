@@ -24,7 +24,4 @@ public record CreateCandidateRequestDTO(
                 message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
         String password) {
 
-//    @NotNull(message = "Experience years cannot be null")
-//    @Min(value = 0, message = "Experience years cannot be less than 0")
-//    @Max(value = 50, message = "Experience years cannot be more than 50")
 }

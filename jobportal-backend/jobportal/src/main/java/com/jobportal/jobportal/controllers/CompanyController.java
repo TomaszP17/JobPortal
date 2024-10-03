@@ -46,5 +46,11 @@ public class CompanyController {
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
-    //todo: deleteMapping
+    @PutMapping("/{companyId}")
+    public ResponseEntity<Void> editCompany(@PathVariable Long companyId,
+                                            @Valid @RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
+        companyService.updateCompany(companyId, createCompanyRequestDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
 }

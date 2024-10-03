@@ -22,13 +22,17 @@ public interface UserMapper {
     CandidateResponseDTO toResponseFromCandidate(Candidate candidate);
     UpdateCandidateResponseDTO toUpdateResponseFromCandidate(Candidate candidate);
 
-    void updateCandidate(UpdateCandidateRequestDTO updateCandidateRequestDTO, @MappingTarget Candidate candidate);
+    @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
+    void updateCandidateFromCreateRequest(CreateCandidateRequestDTO candidateDTO, @MappingTarget Candidate candidate, @Context PasswordEncoder passwordEncoder);
 
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     Company toCompanyFromCreateRequest(CreateCompanyRequestDTO companyRequestDTO, @Context PasswordEncoder passwordEncoder);
     CreateCompanyResponseDTO toCreateResponseFromCompany(Company company);
     CompanyResponseDTO toResponseFromCompany(Company company);
+
+    @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
+    void updateCompanyFromCreateRequest(CreateCompanyRequestDTO companyRequestDTO, @MappingTarget Company company, @Context PasswordEncoder passwordEncoder);
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     Admin toAdminFromCreateRequest(CreateAdminRequestDTO createAdminRequestDTO, @Context PasswordEncoder passwordEncoder);
