@@ -10,6 +10,8 @@ import com.jobportal.jobportal.mappers.OfferMapper;
 import com.jobportal.jobportal.repositories.*;
 import com.jobportal.jobportal.services.localization.LocalizationService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -167,5 +169,10 @@ public class OfferServiceImpl implements OfferService {
                 .findById(offerId)
                 .orElseThrow(() -> new OfferDoesNotExistsException("Offer with id: " + offerId + " does not exists"));
         offerRepository.deleteById(offerId);
+    }
+
+    @Override
+    public Page<OfferResponseDTO> getNextOffers(Pageable pageable) {
+        return offerRepository.findAll(pageable).map(offerMapper::toOfferResponseFromOffer);
     }
 }
