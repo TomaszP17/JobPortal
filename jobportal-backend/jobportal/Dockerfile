@@ -12,10 +12,6 @@ FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://jobportaldb.c1ymyeg8iphg.eu-central-1.rds.amazonaws.com:5432/jobportaldb
-ENV SPRING_DATASOURCE_USERNAME=postgres
-ENV SPRING_DATASOURCE_PASSWORD=dupadupa123
-
 COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
