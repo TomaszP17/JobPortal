@@ -1,6 +1,9 @@
 package com.jobportal.jobportal.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
+import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
 import com.jobportal.jobportal.services.company.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +20,11 @@ class CompanyControllerJUnitTest {
 
     private MockMvc mockMvc;
     private CompanyService companyService;
-    private CompanyController companyController;
 
     @BeforeEach
     void setUp() {
         companyService = Mockito.mock(CompanyService.class);
-        companyController = new CompanyController(companyService);
+        CompanyController companyController = new CompanyController(companyService);
         mockMvc = MockMvcBuilders.standaloneSetup(companyController).build();
     }
 
@@ -81,5 +83,19 @@ class CompanyControllerJUnitTest {
         System.out.println("Response JSON: " + responseContent);
     }
 
+    //todo later
+    @Test
+    void createCompany() throws JsonProcessingException {
+        CreateCompanyRequestDTO newCompany = new CreateCompanyRequestDTO(
+                "New Company",
+                "1234567890",
+                "newcompany@gmail.com",
+                "MarekKozak12@");
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        String companyJson = objectMapper.writeValueAsString(newCompany);
+
+        //Mockito.when(companyService.createCompany(newCompany)).thenReturn();
+
+    }
 }
