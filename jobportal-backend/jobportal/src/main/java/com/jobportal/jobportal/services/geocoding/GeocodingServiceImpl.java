@@ -32,8 +32,8 @@ public class GeocodingServiceImpl implements GeocodingService {
                 .block();
 
         if (response != null && !response.getResults().isEmpty()) {
-            Double lat = response.getResults().getFirst().getGeometry().getLocation().getLat();
-            Double lng = response.getResults().getFirst().getGeometry().getLocation().getLng();
+            Double lat = response.getResults().get(0).getGeometry().getLocation().getLat();
+            Double lng = response.getResults().get(0).getGeometry().getLocation().getLng();
             return new CoordinatesDTO(lat, lng);
         }
 

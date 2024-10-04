@@ -1,10 +1,10 @@
 package com.jobportal.jobportal.configs.filters;
 
+import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.helpers.JwtHelpers;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,10 +21,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtHelpers jwtHelpers;
     private final CustomUserDetailsService userDetailsService;
 
+    private final JwtCookiesHelpers jwtCookiesHelpers;
 
-    public JwtAuthenticationFilter(JwtHelpers jwtHelpers, CustomUserDetailsService userDetailsService) {
+
+    public JwtAuthenticationFilter(JwtHelpers jwtHelpers, CustomUserDetailsService userDetailsService, JwtCookiesHelpers jwtCookiesHelpers) {
         this.jwtHelpers = jwtHelpers;
         this.userDetailsService = userDetailsService;
+        this.jwtCookiesHelpers = jwtCookiesHelpers;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            String accessToken = getTokenFromCookie(request, "accessToken");
+            String accessToken = jwtCookiesHelpers.getTokenFromCookie(request, "accessToken");
 
             if (StringUtils.hasText(accessToken) && jwtHelpers.validateJwtToken(accessToken)) {
                 String username = jwtHelpers.getEmailFromJwtToken(accessToken);
@@ -51,16 +54,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String getTokenFromCookie(HttpServletRequest request, String cookieName) {
-        if (request.getCookies() == null) return null;
-
-        for (Cookie cookie : request.getCookies()) {
-            if (cookieName.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
     }
 }

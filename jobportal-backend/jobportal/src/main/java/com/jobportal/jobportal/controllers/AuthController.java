@@ -5,6 +5,7 @@ import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
 import com.jobportal.jobportal.dtos.auth.LoginRequestDTO;
 import com.jobportal.jobportal.dtos.auth.RefreshTokenDTO;
 import com.jobportal.jobportal.services.auth.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,8 @@ public class AuthController {
 
     //todo responseentity<>
     @PostMapping("/refresh")
-    public ResponseEntity<String> refresh(HttpServletResponse httpServletResponse,@RequestBody RefreshTokenDTO refreshTokenDTO) {
-        CookiesTokensDTO CookiesTokensDTO = authService.refreshToken(refreshTokenDTO.refreshToken());
+    public ResponseEntity<String> refresh(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        CookiesTokensDTO CookiesTokensDTO = authService.refreshToken(httpServletRequest);
         httpServletResponse.addCookie(CookiesTokensDTO.accessTokenCookie());
         httpServletResponse.addCookie(CookiesTokensDTO.refreshTokenCookie());
 

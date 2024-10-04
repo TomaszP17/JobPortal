@@ -1,7 +1,6 @@
 package com.jobportal.jobportal.services.auth;
 
 import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
-import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
 import com.jobportal.jobportal.dtos.auth.LoginRequestDTO;
 import com.jobportal.jobportal.entities.RefreshToken;
 import com.jobportal.jobportal.entities.user.User;
@@ -9,14 +8,16 @@ import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.repositories.RefreshTokenRepository;
 import com.jobportal.jobportal.services.token.TokenService;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -26,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtCookiesHelpers jwtCookiesHelpers;
     private final AuthenticationManager authenticationManager;
 
-    public AuthServiceImpl(TokenService tokenService, RefreshTokenRepository refreshTokenRepository, JwtCookiesHelpers jwtCookiesHelpers, CustomUserDetailsService customUserDetailsService, AuthenticationManager authenticationManager) {
+    public AuthServiceImpl(TokenService tokenService, RefreshTokenRepository refreshTokenRepository, JwtCookiesHelpers jwtCookiesHelpers, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtCookiesHelpers = jwtCookiesHelpers;
@@ -43,8 +44,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CookiesTokensDTO refreshToken(String refreshTokenValue) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
+    public CookiesTokensDTO refreshToken(HttpServletRequest request) {
+
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(jwtCookiesHelpers.getTokenFromCookie(request, "refreshToken"))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
@@ -54,8 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user = refreshToken.getUser();
 
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user.getEmail(), null);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
 
        CookiesTokensDTO tokens = jwtCookiesHelpers.createAuthCookies(tokenService.generateToken(authentication));
 

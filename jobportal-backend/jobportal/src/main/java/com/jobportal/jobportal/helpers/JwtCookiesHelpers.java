@@ -3,6 +3,7 @@ package com.jobportal.jobportal.helpers;
 import com.jobportal.jobportal.dtos.auth.CookiesTokensDTO;
 import com.jobportal.jobportal.dtos.auth.GenerateTokensDTO;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,17 @@ public class JwtCookiesHelpers {
         return new CookiesTokensDTO(accessTokenCookie, refreshTokenCookie);
     }
 
+    public String getTokenFromCookie(HttpServletRequest request, String cookieName) {
+        if (request.getCookies() == null) return null;
+
+        for (Cookie cookie : request.getCookies()) {
+            if (cookieName.equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
     private static Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
@@ -32,5 +44,6 @@ public class JwtCookiesHelpers {
         cookie.setAttribute("SameSite", "Strict");
         return cookie;
     }
+
 }
 
