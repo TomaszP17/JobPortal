@@ -8,8 +8,11 @@ import {useState} from "react";
 import {Api, type LoginRequestDTO} from "@/types/api.ts";
 import {Link} from "react-router-dom";
 import {Switch} from "@/appComponents/atoms/Switch.tsx";
+import { useNavigate } from "react-router-dom";
+
 
 export function LoginForm() {
+    const navigate = useNavigate();
     const [isCompanyAccount, setIsCompanyAccount] = useState(false);
     const [loginForm, setLoginForm] = useState<LoginRequestDTO>({
         "email": "",
@@ -29,7 +32,14 @@ export function LoginForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            await apiClient.api.login(loginForm);
+            const res = await apiClient.api.login(loginForm);
+
+            if(res.ok){
+                navigate("/");
+            } else {
+                const errorJson = await res.json();
+                console.log(errorJson);
+            }
         } catch (error) {
             console.error("Error logging in:", error);
             alert("Failed to log in.");
@@ -69,7 +79,7 @@ export function LoginForm() {
                             onChange={handleFormInputChange}
                             required
                         />
-                        <Button type="submit">Log In</Button>
+                        <Button type="submit" className={"w-full"}>Log In</Button>
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
                                 <span className="w-full border-t"/>
@@ -80,7 +90,7 @@ export function LoginForm() {
                         </div>
                         <Link
                             to={`${import.meta.env.VITE_API_BASE_URL}oauth2/authorization/google?state=${isCompanyAccount ? "company" : "candidate"}`}>
-                            <Button variant="outline">
+                            <Button variant="outline" className={"w-full"}>
                                 <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab"
                                      data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 488 512">

@@ -11,5 +11,6 @@ public interface CandidateService {
     CreateCandidateResponseDTO createCandidate(CreateCandidateRequestDTO createCandidateRequestDTO);
     CandidateResponseDTO getCandidateById(Long id);
     List<CandidateResponseDTO> getAllCandidates();
+    Candidate createCandidateFromOAuth(String email);
     void editCandidate(Long id, CreateCandidateRequestDTO candidateRequestDTO);
 }
