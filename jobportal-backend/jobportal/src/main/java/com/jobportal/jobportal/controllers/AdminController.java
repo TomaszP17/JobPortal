@@ -15,15 +15,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admins")
 public class AdminController {
+
     private final AdminService adminService;
+
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
+
     @PostMapping
     public ResponseEntity<String> createAdmin(@Valid @RequestBody CreateAdminRequestDTO createAdminDTO){
         adminService.createAdmin(createAdminDTO);
         return new ResponseEntity<>("Create Admin Successfully!", HttpStatus.CREATED);
     }
+
     @GetMapping
     public ResponseEntity<List<AdminResponseDTO>> getAllAdmins(){
         return new ResponseEntity<>(adminService.getAllAdmins(), HttpStatus.OK);

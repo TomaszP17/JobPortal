@@ -7,6 +7,9 @@ import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.services.offer.OfferService;
 import com.jobportal.jobportal.services.offer.SimilarOffer;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +63,15 @@ public class OfferController {
     @GetMapping("/similar-offers")
     public ResponseEntity<List<SimilarOfferResponseDTO>> getSimilarOffers(@RequestParam long offerId,@RequestParam int offerCount){
         return new ResponseEntity<>(similarOffer.getSimilarOffers(offerId, offerCount), HttpStatus.OK);
+    }
+
+    @GetMapping("/next-offers")
+    public ResponseEntity<Page<OfferResponseDTO>> getNextOffers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OfferResponseDTO> offersPage = offerService.getNextOffers(pageable);
+        return new ResponseEntity<>(offersPage, HttpStatus.OK);
     }
 }
