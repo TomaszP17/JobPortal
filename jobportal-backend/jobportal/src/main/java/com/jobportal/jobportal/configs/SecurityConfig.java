@@ -2,13 +2,13 @@ package com.jobportal.jobportal.configs;
 
 import com.jobportal.jobportal.configs.filters.JwtAuthenticationFilter;
 import com.jobportal.jobportal.handlers.OAuth2AuthenticationSuccessHandler;
+import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.helpers.JwtHelpers;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,12 +28,15 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final JwtHelpers jwtHelpers;
 
+    private final JwtCookiesHelpers jwtCookiesHelpers;
+
     public SecurityConfig(CustomUserDetailsService customUserDetailsService,
                           OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-                          JwtHelpers jwtHelpers) {
+                          JwtHelpers jwtHelpers, JwtCookiesHelpers jwtCookiesHelpers) {
         this.customUserDetailsService = customUserDetailsService;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.jwtHelpers = jwtHelpers;
+        this.jwtCookiesHelpers = jwtCookiesHelpers;
     }
 
     @Bean
@@ -79,6 +82,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtHelpers, customUserDetailsService);
+        return new JwtAuthenticationFilter(jwtHelpers, customUserDetailsService, jwtCookiesHelpers);
     }
 }
