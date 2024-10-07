@@ -3,14 +3,16 @@ package com.jobportal.jobportal.services.user;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import com.jobportal.jobportal.entities.offer.Offer;
+import com.jobportal.jobportal.entities.user.Authority;
+import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.entities.user.UserAuthority;
+import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
 import com.jobportal.jobportal.exceptions.offer.OfferDoesNotExistsException;
 import com.jobportal.jobportal.exceptions.user.FavouriteOfferAlreadyExistsException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.OfferMapper;
-import com.jobportal.jobportal.repositories.OfferRepository;
-import com.jobportal.jobportal.repositories.UserFavouriteOfferRepository;
-import com.jobportal.jobportal.repositories.UserRepository;
+import com.jobportal.jobportal.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,16 @@ public class UserServiceImpl implements UserService{
     private final UserFavouriteOfferRepository userFavouriteOfferRepository;
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
-    public UserServiceImpl(UserRepository userRepository, UserFavouriteOfferRepository userFavouriteOfferRepository, OfferRepository offerRepository, OfferMapper offerMapper) {
+    private final AuthorityRepository authorityRepository;
+    private final UserAuthorityRepository userAuthorityRepository;
+
+    public UserServiceImpl(UserRepository userRepository, UserFavouriteOfferRepository userFavouriteOfferRepository, OfferRepository offerRepository, OfferMapper offerMapper, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository) {
         this.userRepository = userRepository;
         this.userFavouriteOfferRepository = userFavouriteOfferRepository;
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
+        this.authorityRepository = authorityRepository;
+        this.userAuthorityRepository = userAuthorityRepository;
     }
     @Override
     public List<User> getAllUsers() {
@@ -94,4 +101,5 @@ public class UserServiceImpl implements UserService{
         }
         userFavouriteOfferRepository.delete(userFavouriteOffer);
     }
+
 }

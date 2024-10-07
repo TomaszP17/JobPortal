@@ -3,30 +3,57 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthForm } from '../molecules/AuthForm';
 import { Api } from "@/types/api";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
+
+interface FormData {
+    email: string;
+    name: string;
+    nip: string;
+    firstName: string;
+    lastName: string;
+}
+
 
 export const CompleteProfile: React.FC = () => {
     const navigate = useNavigate();
+    const [urlParams] = useSearchParams();
     const apiClient = new Api();
-
-    const [isCompany, setIsCompany] = useState(false);
-    const [formData, setFormData] = useState({
+    const [isCompany, setIsCompany] = useState<boolean>(false);
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [formData, setFormData] = useState<FormData>({
         email: '',
         name: '',
         nip: '',
         firstName: '',
-        lastName: '',
-        password: '',
+        lastName: ''
     });
+
+    useEffect(() => {
+        const emailParam = urlParams.get('email') || '';
+        const nameParam = urlParams.get('name') || '';
+        setEmail(emailParam);
+        setName(nameParam);
+        setFormData({
+            email: emailParam,
+            name: isCompany ? nameParam : '',
+            nip: '',
+            firstName: isCompany ? '' : nameParam,
+            lastName: '',
+        });
+    }, [urlParams, isCompany]);
+
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [id]: value,
-        }));
+        setFormData((prevData) => {
+            if (!prevData) return prevData;
+            return {
+                ...prevData,
+                [id]: value,
+            };
+        });
     };
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
@@ -121,6 +148,9 @@ export const CompleteProfile: React.FC = () => {
                         onSubmit={handleSubmit}
                         submitButtonLabel="Update Profile"
                         showSwitch={true}
+                        switchLabel={isCompany ? "Company Account" : "Candidate Account"}
+                        switchState={isCompany}
+                        onSwitchChange={setIsCompany}
                     />
                 </CardContent>
             </Card>

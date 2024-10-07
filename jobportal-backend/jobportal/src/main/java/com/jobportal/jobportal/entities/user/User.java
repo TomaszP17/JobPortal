@@ -54,6 +54,9 @@ public abstract class User {
     @Column(name = "is_completed", nullable = false)
     private Boolean isCompleted = Boolean.TRUE;
 
+    @Column(name = "is_oauth", nullable = false)
+    private Boolean isOauth = Boolean.FALSE;
+
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserAuthority> userAuthority = new HashSet<>();
