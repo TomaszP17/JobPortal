@@ -1,120 +1,129 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { InputField } from '../atoms/InputField';
-import { Button } from '../atoms/Button';
+// components/organisms/CompleteProfile.tsx
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthForm } from '../molecules/AuthForm';
+import { Api } from "@/types/api";
+import { useNavigate } from 'react-router-dom';
 
 export const CompleteProfile: React.FC = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { email, scope } = location.state;
+    const apiClient = new Api();
 
-    const isCandidate = scope.includes('CANDIDATE');
-    const isCompany = scope.includes('COMPANY');
-
+    const [isCompany, setIsCompany] = useState(false);
     const [formData, setFormData] = useState({
-        email: email || '',
+        email: '',
         name: '',
+        nip: '',
         firstName: '',
         lastName: '',
-        nip: '',
+        password: '',
     });
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
+        setFormData((prevData) => ({
+            ...prevData,
             [id]: value,
         }));
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         try {
-            if (isCandidate) {
-                console.log('Submit candidate profile:', {
-                    email: formData.email,
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                });
-            } else if (isCompany) {
-                console.log('Submit company profile:', {
-                    email: formData.email,
-                    name: formData.name,
-                    nip: formData.nip,
-                });
+            if (isCompany) {
+                const { name, nip } = formData;
+                // await apiClient.api.completeCompanyProfile({ name, nip });
+                alert("Company profile completed successfully!");
+            } else {
+                const { firstName, lastName } = formData;
+                // await apiClient.api.completeCandidateProfile({ firstName, lastName });
+                alert("Candidate profile completed successfully!");
             }
-
             navigate('/');
         } catch (error) {
-            console.error('Error submitting profile:', error);
+            console.error("Error completing profile:", error);
+            alert("Failed to complete profile.");
         }
     };
 
+    const fields = isCompany
+        ? [
+            {
+                id: "email",
+                label: "Email",
+                type: "email",
+                placeholder: "Enter your email",
+                value: formData.email,
+                onChange: handleInputChange,
+                required: true,
+                disabled: true,
+            },
+            {
+                id: "name",
+                label: "Company Name",
+                type: "text",
+                placeholder: "Enter your company name",
+                value: formData.name,
+                onChange: handleInputChange,
+                required: true,
+            },
+            {
+                id: "nip",
+                label: "NIP",
+                type: "text",
+                placeholder: "Enter your NIP",
+                value: formData.nip,
+                onChange: handleInputChange,
+                required: true,
+            },
+        ]
+        : [
+            {
+                id: "email",
+                label: "Email",
+                type: "email",
+                placeholder: "Enter your email",
+                value: formData.email,
+                onChange: handleInputChange,
+                required: true,
+                disabled: true,
+            },
+            {
+                id: "firstName",
+                label: "First Name",
+                type: "text",
+                placeholder: "Enter your first name",
+                value: formData.firstName,
+                onChange: handleInputChange,
+                required: true,
+            },
+            {
+                id: "lastName",
+                label: "Last Name",
+                type: "text",
+                placeholder: "Enter your last name",
+                value: formData.lastName,
+                onChange: handleInputChange,
+                required: true,
+            },
+        ];
+
     return (
-        <div className="form-container">
-            <h1>Complete Your Profile</h1>
-            <form onSubmit={handleSubmit}>
-                {/* Email is pre-filled and disabled */}
-                <InputField
-                    id="email"
-                    label="Email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    disabled
-                />
-
-                {isCandidate && (
-                    <>
-                        <InputField
-                            id="firstName"
-                            label="First Name"
-                            type="text"
-                            placeholder="Enter your first name"
-                            value={formData.firstName}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <InputField
-                            id="lastName"
-                            label="Last Name"
-                            type="text"
-                            placeholder="Enter your last name"
-                            value={formData.lastName}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </>
-                )}
-
-                {isCompany && (
-                    <>
-                        <InputField
-                            id="name"
-                            label="Company Name"
-                            type="text"
-                            placeholder="Enter your company name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <InputField
-                            id="nip"
-                            label="NIP"
-                            type="text"
-                            placeholder="Enter your NIP"
-                            value={formData.nip}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </>
-                )}
-
-                <Button type="submit">Submit</Button>
-            </form>
+        <div className="flex flex-col gap-y-10">
+            <Card className="w-full max-w-md mx-auto min-w-96">
+                <CardHeader>
+                    <CardTitle>Complete Your Profile</CardTitle>
+                    <CardDescription>Provide the necessary information to complete your profile</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <AuthForm
+                        fields={fields}
+                        onSubmit={handleSubmit}
+                        submitButtonLabel="Update Profile"
+                        showSwitch={true}
+                    />
+                </CardContent>
+            </Card>
         </div>
     );
-};
+}

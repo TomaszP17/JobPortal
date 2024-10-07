@@ -8,7 +8,7 @@ export interface InputFieldProps {
     label: string;
     type: string;
     placeholder: string;
-    value: string;
+    value: string | undefined;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     disabled?: boolean;
