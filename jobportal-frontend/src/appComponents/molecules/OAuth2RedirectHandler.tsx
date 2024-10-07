@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from "jwt-decode";
-import { storeTokens } from '@/lib/utils.ts';
+import {useSearchParams} from "react-router-dom";
+import {Spinner} from "@/appComponents/atoms/Spinner.tsx";
 
 interface DecodedToken {
     email: string;
@@ -10,35 +10,20 @@ interface DecodedToken {
 
 export const OAuth2RedirectHandler: React.FC = () => {
     const navigate = useNavigate();
+    const [urlParams] = useSearchParams();
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const accessToken = urlParams.get('accessToken');
-        const refreshToken = urlParams.get('refreshToken');
-        const requiresAdditionalInfo = urlParams.get('requiresAdditionalInfo') === 'true';
+        const requiresAdditionalInfo = urlParams.get("requiresAdditionalInfo");
 
-        if (accessToken && refreshToken) {
-            storeTokens(accessToken, refreshToken);
-
-            const decodedToken = jwtDecode<DecodedToken>(accessToken);
-
-            console.log(decodedToken);
-
-            if (requiresAdditionalInfo) {
-                navigate('/complete-profile', {
-                    state: {
-                        email: decodedToken.email,
-                        scope: decodedToken.scope,
-                    },
-                });
-            } else {
-                navigate('/');
-            }
-        } else {
-            console.error('Access token or refresh token is missing');
-            navigate('/login');
+        if (requiresAdditionalInfo){
+            const name = urlParams.get("name") || '';
+            const email = urlParams.get("email") || '';
+            navigate(`/complete-profile?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`);
         }
-    }, [navigate]);
+        else {
+            navigate(`/`);
+        }
+    }, [navigate, urlParams]);
 
-    return <div>Processing OAuth redirect...</div>;
+    return <Spinner/>;
 };
