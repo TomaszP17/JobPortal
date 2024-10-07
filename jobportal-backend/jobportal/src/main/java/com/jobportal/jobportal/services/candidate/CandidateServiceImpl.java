@@ -39,6 +39,7 @@ public class CandidateServiceImpl implements CandidateService{
         this.pdfService = pdfService;
     }
 
+    //todo: write check if candidate is already registered
     @Transactional
     @Override
     public CreateCandidateResponseDTO createCandidate(CreateCandidateRequestDTO createCandidateRequestDTO) {
@@ -87,5 +88,30 @@ public class CandidateServiceImpl implements CandidateService{
         System.err.println("Edited candidate: " + existingCandidate);
         candidateRepository.save(existingCandidate);
 
+    }
+
+    @Override
+    public CreateCandidateFromOAuthResponseDTO createCandidateFromAuth(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO) {
+        candidateRepository.findByEmail(createCandidateFromAuthRequestDTO.email())
+                .ifPresent(candidate -> {
+                    throw new UserDoesNotExistException("User with email: " + createCandidateFromAuthRequestDTO.email() + " already exists");
+                });
+
+        Candidate candidate = userMapper.toCandidateFromRequestOAuthRequest(createCandidateFromAuthRequestDTO);
+        candidateRepository.save(candidate);
+
+        Authority authority = authorityRepository.findByName("ROLE_CANDIDATE");
+
+        if (authority == null){
+            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+        }
+
+        UserAuthority userAuthority = UserAuthority.builder()
+                .user(candidate)
+                .authority(authority)
+                .build();
+
+        userAuthorityRepository.save(userAuthority);
+        return userMapper.tiCreateResponseFromOAuthRequest(candidate);
     }
 }

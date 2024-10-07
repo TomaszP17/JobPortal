@@ -21,9 +21,12 @@ public interface UserMapper {
     CreateCandidateResponseDTO toCreateResponseFromCandidate(Candidate candidate);
     CandidateResponseDTO toResponseFromCandidate(Candidate candidate);
     UpdateCandidateResponseDTO toUpdateResponseFromCandidate(Candidate candidate);
+    Candidate toCandidateFromRequestOAuthRequest(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO);
+    CreateCandidateFromOAuthResponseDTO tiCreateResponseFromOAuthRequest(Candidate candidate);
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     void updateCandidateFromCreateRequest(CreateCandidateRequestDTO candidateDTO, @MappingTarget Candidate candidate, @Context PasswordEncoder passwordEncoder);
+
 
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")

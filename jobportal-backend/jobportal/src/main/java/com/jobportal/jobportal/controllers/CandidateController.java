@@ -2,6 +2,7 @@ package com.jobportal.jobportal.controllers;
 
 
 import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
+import com.jobportal.jobportal.dtos.candidate.CreateCandidateFromAuthRequestDTO;
 import com.jobportal.jobportal.dtos.candidate.CreateCandidateRequestDTO;
 import com.jobportal.jobportal.services.candidate.CandidateService;
 import jakarta.validation.Valid;
@@ -27,6 +28,14 @@ public class CandidateController {
         candidateService.createCandidate(candidateRequestDTO);
         return new ResponseEntity<>("Candidate Created Successfully!", HttpStatus.CREATED);
     }
+
+    @PostMapping("/oauth")
+    public ResponseEntity<?> createCandidateOauth(
+            @Valid @RequestBody CreateCandidateFromAuthRequestDTO candidateRequestDTO){
+        candidateService.createCandidateFromAuth(candidateRequestDTO);
+        return new ResponseEntity<>("Candidate Created Successfully!", HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CandidateResponseDTO> getCandidateById(@PathVariable Long id){

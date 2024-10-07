@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-232.9921.47">
+    <data-source name="jobportaldb@jobportaldb.c1ymyeg8iphg.eu-central-1.rds.amazonaws.com" uuid="8d04ab28-6aea-4dbb-8f25-04a8e7bb6971">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
