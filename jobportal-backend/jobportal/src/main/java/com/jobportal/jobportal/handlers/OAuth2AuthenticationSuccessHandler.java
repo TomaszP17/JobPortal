@@ -63,8 +63,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                                                  Optional<? extends User> userOptional) throws IOException {
 
         if (userOptional.isPresent()) {
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+            User user = userOptional.get();
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getUserAuthority()
+                    .stream()
+                    .map(ua -> new SimpleGrantedAuthority(ua.getAuthority().getName()))
+                    .toList());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             setCookiesAndRedirect(response, authentication);
         } else {

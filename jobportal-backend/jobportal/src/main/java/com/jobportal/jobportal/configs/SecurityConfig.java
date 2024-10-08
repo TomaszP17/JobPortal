@@ -4,6 +4,7 @@ import com.jobportal.jobportal.configs.filters.JwtAuthenticationFilter;
 import com.jobportal.jobportal.handlers.OAuth2AuthenticationSuccessHandler;
 import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.helpers.JwtHelpers;
+import com.jobportal.jobportal.repositories.UserRepository;
 import com.jobportal.jobportal.services.user.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,15 +28,17 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final JwtHelpers jwtHelpers;
+    private final UserRepository userRepository;
 
     private final JwtCookiesHelpers jwtCookiesHelpers;
 
     public SecurityConfig(CustomUserDetailsService customUserDetailsService,
                           OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-                          JwtHelpers jwtHelpers, JwtCookiesHelpers jwtCookiesHelpers) {
+                          JwtHelpers jwtHelpers, UserRepository userRepository, JwtCookiesHelpers jwtCookiesHelpers) {
         this.customUserDetailsService = customUserDetailsService;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.jwtHelpers = jwtHelpers;
+        this.userRepository = userRepository;
         this.jwtCookiesHelpers = jwtCookiesHelpers;
     }
 
@@ -82,6 +85,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtHelpers, customUserDetailsService, jwtCookiesHelpers);
+        return new JwtAuthenticationFilter(jwtHelpers, userRepository, jwtCookiesHelpers);
     }
 }

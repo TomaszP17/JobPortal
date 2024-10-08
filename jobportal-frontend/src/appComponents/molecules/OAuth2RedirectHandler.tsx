@@ -15,7 +15,7 @@ export const OAuth2RedirectHandler: React.FC = () => {
     useEffect(() => {
         const requiresAdditionalInfo = urlParams.get("requiresAdditionalInfo");
 
-        if (requiresAdditionalInfo){
+        if (requiresAdditionalInfo === 'true'){
             const name = urlParams.get("name") || '';
             const email = urlParams.get("email") || '';
             navigate(`/complete-profile?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`);
