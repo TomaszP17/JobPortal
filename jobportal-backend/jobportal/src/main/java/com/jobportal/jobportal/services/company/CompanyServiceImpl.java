@@ -76,32 +76,6 @@ public class CompanyServiceImpl implements CompanyService{
         return companyRepository.findCompaniesWithOfferStats(sortBy, pageable);
     }
 
-    @Transactional
-    @Override
-    public Company createCompanyFromOAuth(String email) {
-        Company company = Company.builder()
-                .email(email)
-                .build();
-
-        company = companyRepository.save(company);
-
-        Authority authority = authorityRepository.findByName("ROLE_COMPANY");
-
-        if (authority == null){
-            throw new AuthorityDoesNotExistException("The authority named: ROLE_COMPANY does not exist");
-        }
-
-        UserAuthority userAuthority = UserAuthority.builder()
-                .user(company)
-                .authority(authority)
-                .build();
-
-        userAuthorityRepository.save(userAuthority);
-
-        return company;
-    }
-
-
     @Override
     public void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO) {
         Company company = companyRepository.findById(id)
@@ -121,12 +95,13 @@ public class CompanyServiceImpl implements CompanyService{
                 });
 
         Company company = userMapper.toCompanyFromRequestOAuth(requestDTO);
+        company.setIsOauth(true);
         companyRepository.save(company);
 
         Authority authority = authorityRepository.findByName("ROLE_COMPANY");
 
         if (authority == null){
-            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+            throw new AuthorityDoesNotExistException("The authority named: ROLE_COMPANY does not exist");
         }
 
         UserAuthority userAuthority = UserAuthority.builder()

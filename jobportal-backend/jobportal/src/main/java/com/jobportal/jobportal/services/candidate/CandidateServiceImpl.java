@@ -92,19 +92,20 @@ public class CandidateServiceImpl implements CandidateService{
 
     @Transactional
     @Override
-    public CreateCandidateFromOAuthResponseDTO createCandidateFromAuth(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO) {
+    public CreateCandidateFromOAuthResponseDTO createCandidateFromOAuth(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO) {
         candidateRepository.findByEmail(createCandidateFromAuthRequestDTO.email())
                 .ifPresent(candidate -> {
                     throw new UserDoesNotExistException("User with email: " + createCandidateFromAuthRequestDTO.email() + " already exists");
                 });
 
         Candidate candidate = userMapper.toCandidateFromRequestOAuthRequest(createCandidateFromAuthRequestDTO);
+        candidate.setIsOauth(true);
         candidateRepository.save(candidate);
 
         Authority authority = authorityRepository.findByName("ROLE_CANDIDATE");
 
         if (authority == null){
-            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+            throw new AuthorityDoesNotExistException("The authority named: ROLE_CANDIDATE does not exist");
         }
 
         UserAuthority userAuthority = UserAuthority.builder()

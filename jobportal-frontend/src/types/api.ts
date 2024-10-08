@@ -9,6 +9,45 @@
  * ---------------------------------------------------------------
  */
 
+export interface CreateCompanyRequestDTO {
+  /**
+   * @minLength 2
+   * @maxLength 100
+   */
+  name: string;
+  /** @pattern \d{10} */
+  nip?: string;
+  email: string;
+  /**
+   * @minLength 8
+   * @maxLength 30
+   * @pattern ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$
+   */
+  password: string;
+}
+
+export interface CreateCandidateRequestDTO {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   * @pattern ^[a-zA-Zà-žÀ-Ž'\- ]+$
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   * @pattern ^[a-zA-Zà-žÀ-Ž'\- ]+$
+   */
+  lastName: string;
+  email: string;
+  /**
+   * @minLength 8
+   * @maxLength 30
+   * @pattern ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$
+   */
+  password: string;
+}
+
 export interface WorkTypeCreateRequestDTO {
   /**
    * @minLength 0
@@ -80,7 +119,7 @@ export interface EmploymentTypeCreateRequestDTO {
   name: string;
 }
 
-export interface CreateCompanyRequestDTO {
+export interface CreateCompanyFromOAuthRequestDTO {
   /**
    * @minLength 2
    * @maxLength 100
@@ -89,15 +128,9 @@ export interface CreateCompanyRequestDTO {
   /** @pattern \d{10} */
   nip?: string;
   email: string;
-  /**
-   * @minLength 8
-   * @maxLength 30
-   * @pattern ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$
-   */
-  password: string;
 }
 
-export interface CreateCandidateRequestDTO {
+export interface CreateCandidateFromAuthRequestDTO {
   /**
    * @minLength 1
    * @maxLength 50
@@ -111,12 +144,6 @@ export interface CreateCandidateRequestDTO {
    */
   lastName: string;
   email: string;
-  /**
-   * @minLength 8
-   * @maxLength 30
-   * @pattern ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$
-   */
-  password: string;
 }
 
 export interface RefreshTokenDTO {
@@ -176,6 +203,7 @@ export interface Company {
   githubLink?: string;
   linkedinLink?: string;
   isCompleted?: boolean;
+  isOauth?: boolean;
   name?: string;
   /** @pattern ^\d{10}$ */
   nip?: string;
@@ -321,6 +349,7 @@ export interface User {
   githubLink?: string;
   linkedinLink?: string;
   isCompleted?: boolean;
+  isOauth?: boolean;
   /** @uniqueItems true */
   userAuthority?: UserAuthority[];
   /** @uniqueItems true */
@@ -366,6 +395,60 @@ export interface TechnologyResponseDTO {
   /** @format int64 */
   id?: number;
   name?: string;
+}
+
+export interface SimilarOfferResponseDTO {
+  /** @format int64 */
+  id?: number;
+  title?: string;
+  /** @format date-time */
+  expiryDate?: string;
+  /** @format int32 */
+  salaryMin?: number;
+  /** @format int32 */
+  salaryMax?: number;
+  description?: string;
+  /** @format double */
+  similarityScore?: number;
+}
+
+export interface PageOfferResponseDTO {
+  /** @format int32 */
+  totalPages?: number;
+  /** @format int64 */
+  totalElements?: number;
+  pageable?: PageableObject;
+  first?: boolean;
+  last?: boolean;
+  /** @format int32 */
+  size?: number;
+  content?: OfferResponseDTO[];
+  /** @format int32 */
+  number?: number;
+  sort?: SortObject[];
+  /** @format int32 */
+  numberOfElements?: number;
+  empty?: boolean;
+}
+
+export interface PageableObject {
+  paged?: boolean;
+  /** @format int32 */
+  pageNumber?: number;
+  /** @format int32 */
+  pageSize?: number;
+  unpaged?: boolean;
+  /** @format int64 */
+  offset?: number;
+  sort?: SortObject[];
+}
+
+export interface SortObject {
+  direction?: string;
+  nullHandling?: string;
+  ascending?: boolean;
+  property?: string;
+  ignoreCase?: boolean;
 }
 
 export interface ArticleDTO {
@@ -709,7 +792,7 @@ export class HttpClient<SecurityDataType = unknown> {
         r.error = data;
       }
     } catch (e) {
-      r.error = e;
+      r.error = e as E;
     }
 
     if (cancelToken) {
@@ -727,6 +810,52 @@ export class HttpClient<SecurityDataType = unknown> {
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
+    /**
+     * No description
+     *
+     * @tags company-controller
+     * @name EditCompany
+     * @request PUT:/api/companies/{companyId}
+     */
+    editCompany: (companyId: number, data: CreateCompanyRequestDTO, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/companies/${companyId}`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags candidate-controller
+     * @name GetCandidateById
+     * @request GET:/api/candidates/{id}
+     */
+    getCandidateById: (id: number, params: RequestParams = {}) =>
+      this.request<CandidateResponseDTO, any>({
+        path: `/api/candidates/${id}`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags candidate-controller
+     * @name EditCandidate
+     * @request PUT:/api/candidates/{id}
+     */
+    editCandidate: (id: number, data: CreateCandidateRequestDTO, params: RequestParams = {}) =>
+      this.request<object, any>({
+        path: `/api/candidates/${id}`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -985,6 +1114,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags company-controller
+     * @name CreateCompanyOauth
+     * @request POST:/api/companies/oauth
+     */
+    createCompanyOauth: (data: CreateCompanyFromOAuthRequestDTO, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/companies/oauth`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags candidate-controller
      * @name GetAllCandidates
      * @request GET:/api/candidates
@@ -1015,16 +1160,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags candidate-controller
+     * @name CreateCandidateOauth
+     * @request POST:/api/candidates/oauth
+     */
+    createCandidateOauth: (data: CreateCandidateFromAuthRequestDTO, params: RequestParams = {}) =>
+      this.request<object, any>({
+        path: `/api/candidates/oauth`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags auth-controller
      * @name Refresh
      * @request POST:/api/auth/refresh
      */
-    refresh: (data: RefreshTokenDTO, params: RequestParams = {}) =>
+    refresh: (params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/auth/refresh`,
         method: "POST",
-        body: data,
-        type: ContentType.Json,
         ...params,
       }),
 
@@ -1250,6 +1409,58 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags offer-controller
+     * @name GetSimilarOffers
+     * @request GET:/api/offers/similar-offers
+     */
+    getSimilarOffers: (
+      query: {
+        /** @format int64 */
+        offerId: number;
+        /** @format int32 */
+        offerCount: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<SimilarOfferResponseDTO[], any>({
+        path: `/api/offers/similar-offers`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags offer-controller
+     * @name GetNextOffers
+     * @request GET:/api/offers/next-offers
+     */
+    getNextOffers: (
+      query?: {
+        /**
+         * @format int32
+         * @default 0
+         */
+        page?: number;
+        /**
+         * @format int32
+         * @default 10
+         */
+        size?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PageOfferResponseDTO, any>({
+        path: `/api/offers/next-offers`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags offer-controller
      * @name GetOffersByLocalization
      * @request GET:/api/offers/filter
      */
@@ -1404,20 +1615,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/companies/top-companies`,
         method: "GET",
         query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags candidate-controller
-     * @name GetCandidateById
-     * @request GET:/api/candidates/{id}
-     */
-    getCandidateById: (id: number, params: RequestParams = {}) =>
-      this.request<CandidateResponseDTO, any>({
-        path: `/api/candidates/${id}`,
-        method: "GET",
         ...params,
       }),
 

@@ -32,7 +32,7 @@ public class CandidateController {
     @PostMapping("/oauth")
     public ResponseEntity<?> createCandidateOauth(
             @Valid @RequestBody CreateCandidateFromAuthRequestDTO candidateRequestDTO){
-        candidateService.createCandidateFromAuth(candidateRequestDTO);
+        candidateService.createCandidateFromOAuth(candidateRequestDTO);
         return new ResponseEntity<>("Candidate Created Successfully!", HttpStatus.CREATED);
     }
 

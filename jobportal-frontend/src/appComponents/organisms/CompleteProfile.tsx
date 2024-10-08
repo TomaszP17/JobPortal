@@ -58,15 +58,23 @@ export const CompleteProfile: React.FC = () => {
         event.preventDefault();
         try {
             if (isCompany) {
-                const { name, nip } = formData;
-                // await apiClient.api.completeCompanyProfile({ name, nip });
+                const { email, name, nip } = formData;
+                await apiClient.api.createCompanyOauth({
+                    email,
+                    name,
+                    nip
+                })
                 alert("Company profile completed successfully!");
             } else {
-                const { firstName, lastName } = formData;
-                // await apiClient.api.completeCandidateProfile({ firstName, lastName });
+                const { email ,firstName, lastName } = formData;
+                await apiClient.api.createCandidateOauth({
+                    email,
+                    firstName,
+                    lastName
+                });
                 alert("Candidate profile completed successfully!");
             }
-            navigate('/');
+            navigate('/login');
         } catch (error) {
             console.error("Error completing profile:", error);
             alert("Failed to complete profile.");
