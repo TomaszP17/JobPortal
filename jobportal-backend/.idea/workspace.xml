@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ab4bb61b-1f0a-48c4-895c-84b20ad341b7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobportal/src/main/java/com/jobportal/jobportal/services/aws/s3/S3ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/jobportal/src/main/java/com/jobportal/jobportal/services/aws/s3/S3ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobportal/src/main/java/com/jobportal/jobportal/services/pdf/PdfServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/jobportal/src/main/java/com/jobportal/jobportal/services/pdf/PdfServiceImpl.java" afterDir="false" />
-    </list>
+    <list default="true" id="ab4bb61b-1f0a-48c4-895c-84b20ad341b7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,42 +13,33 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
-  <component name="ProjectId" id="2n79V4h8nmziclW3kBLhmSwoNU8" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="2n6z8CBEGDkhvTKg2uyA2DRBpOX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Tomasz/Desktop/Praca/jobportal/JobPortal/jobportal-backend/jobportal",
-    "nodejs_package_manager_path": "npm",
+    "last_opened_file_path": "C:/Users/tpluc/OneDrive/Pulpit/praca/jobportal2.0/JobPortal/jobportal-backend/jobportal",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="ab4bb61b-1f0a-48c4-895c-84b20ad341b7" name="Changes" comment="" />
-      <created>1728313267751</created>
+      <created>1728308154859</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1728313267751</updated>
-      <workItem from="1728313268831" duration="18000" />
-      <workItem from="1728313334291" duration="31000" />
+      <updated>1728308154859</updated>
+      <workItem from="1728308158884" duration="92000" />
     </task>
     <servers />
   </component>

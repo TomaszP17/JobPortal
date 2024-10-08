@@ -13,5 +13,6 @@ public interface CandidateService {
     CandidateResponseDTO getCandidateById(Long id);
     List<CandidateResponseDTO> getAllCandidates();
     void editCandidate(Long id, CreateCandidateRequestDTO candidateRequestDTO);
+    CreateCandidateFromOAuthResponseDTO createCandidateFromAuth(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO);
 
 }
