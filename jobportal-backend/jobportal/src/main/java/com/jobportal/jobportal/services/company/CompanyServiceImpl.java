@@ -1,9 +1,6 @@
 package com.jobportal.jobportal.services.company;
 
-import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
-import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
+import com.jobportal.jobportal.dtos.company.*;
 import com.jobportal.jobportal.entities.user.Authority;
 import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
@@ -113,5 +110,30 @@ public class CompanyServiceImpl implements CompanyService{
         userMapper.updateCompanyFromCreateRequest(createCompanyRequestDTO, company, passwordEncoder);
 
         companyRepository.save(company);
+    }
+
+    @Transactional
+    @Override
+    public void createCompanyFromOAuth(CreateCompanyFromOAuthRequestDTO requestDTO) {
+        companyRepository.findByEmail(requestDTO.email())
+                .ifPresent(company -> {
+                    throw new UserDoesNotExistException("User with email: " + requestDTO.email() + " already exists");
+                });
+
+        Company company = userMapper.toCompanyFromRequestOAuth(requestDTO);
+        companyRepository.save(company);
+
+        Authority authority = authorityRepository.findByName("ROLE_COMPANY");
+
+        if (authority == null){
+            throw new AuthorityDoesNotExistException("The authority named: CANDIDATE does not exist");
+        }
+
+        UserAuthority userAuthority = UserAuthority.builder()
+                .user(company)
+                .authority(authority)
+                .build();
+
+        userAuthorityRepository.save(userAuthority);
     }
 }
