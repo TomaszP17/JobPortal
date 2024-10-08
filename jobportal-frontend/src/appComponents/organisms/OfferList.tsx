@@ -47,11 +47,18 @@ export const OfferList: React.FC = () => {
             observer.current.disconnect();
         }
 
-        observer.current = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && hasMore) {
-                fetchOffers();
+        observer.current = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    fetchOffers();
+                }
+            },
+            {
+                root: null,
+                rootMargin: '200px',
+                threshold: 0.1,
             }
-        });
+        );
 
         const trigger = document.querySelector('#loadMoreTrigger');
         if (trigger) {
@@ -78,7 +85,6 @@ export const OfferList: React.FC = () => {
                 ))}
             {hasMore && <div id="loadMoreTrigger" />}
             {error && <div className="text-red-500">{error}</div>}
-            {!hasMore && <div className="text-center mt-4">There are no other offers</div>}
         </div>
     );
 };

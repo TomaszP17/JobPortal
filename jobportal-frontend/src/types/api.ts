@@ -465,6 +465,15 @@ export interface NewsResponseDTO {
   articles?: ArticleDTO[];
 }
 
+export interface LocalizationCoordinatesResponseDTO {
+  /** @format double */
+  lat?: number;
+  /** @format double */
+  lng?: number;
+  /** @uniqueItems true */
+  offerIds?: number[];
+}
+
 export interface CoordinatesDTO {
   /** @format double */
   lat?: number;
@@ -1494,6 +1503,34 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/news/api/news`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags localization-controller
+     * @name GetOffersLocalizationAndOfferId
+     * @request GET:/api/localization
+     */
+    getOffersLocalizationAndOfferId: (params: RequestParams = {}) =>
+      this.request<LocalizationCoordinatesResponseDTO[], any>({
+        path: `/api/localization`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags localization-controller
+     * @name GetAllLocalizations
+     * @request GET:/api/localization/all
+     */
+    getAllLocalizations: (params: RequestParams = {}) =>
+      this.request<object, any>({
+        path: `/api/localization/all`,
+        method: "GET",
         ...params,
       }),
 
