@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+  <component name="dataSourceStorageLocal" created-in="IU-241.14494.240">
+    <data-source name="jobportaldb@jobportaldb.c1ymyeg8iphg.eu-central-1.rds.amazonaws.com" uuid="8d04ab28-6aea-4dbb-8f25-04a8e7bb6971">
+      <database-info product="PostgreSQL" version="16.3" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.6.0" dbms="POSTGRES" exact-version="16.3" exact-driver-version="42.6">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <user-name>postgres</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+=======
   <component name="dataSourceStorageLocal" created-in="IU-232.9921.47">
     <data-source name="jobportaldb@jobportaldb.c1ymyeg8iphg.eu-central-1.rds.amazonaws.com" uuid="8d04ab28-6aea-4dbb-8f25-04a8e7bb6971">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
       <schema-mapping />
+>>>>>>> 1a4c76ae115543f4f60139a2c520cbaabde33026
     </data-source>
   </component>
 </project>

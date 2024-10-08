@@ -90,6 +90,7 @@ public class CandidateServiceImpl implements CandidateService{
 
     }
 
+    @Transactional
     @Override
     public CreateCandidateFromOAuthResponseDTO createCandidateFromAuth(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO) {
         candidateRepository.findByEmail(createCandidateFromAuthRequestDTO.email())

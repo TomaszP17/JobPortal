@@ -1,8 +1,6 @@
 package com.jobportal.jobportal.services.aws.s3;
 
 import com.jobportal.jobportal.configs.aws.AwsS3BucketConfig;
-import io.awspring.cloud.s3.ObjectMetadata;
-import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

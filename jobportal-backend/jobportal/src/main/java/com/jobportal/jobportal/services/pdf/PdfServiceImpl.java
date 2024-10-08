@@ -1,6 +1,5 @@
 package com.jobportal.jobportal.services.pdf;
 
-import com.jobportal.jobportal.dtos.pdf.PdfDownloadRequestDTO;
 import com.jobportal.jobportal.dtos.pdf.PdfDownloadResponseDTO;
 import com.jobportal.jobportal.entities.Pdf;
 import com.jobportal.jobportal.repositories.PdfRepository;

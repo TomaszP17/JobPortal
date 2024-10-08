@@ -2,8 +2,8 @@ package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
 import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
+import com.jobportal.jobportal.dtos.company.CreateCompanyFromOAuthRequestDTO;
 import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
 import com.jobportal.jobportal.services.company.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,14 @@ public class CompanyController {
     @PostMapping
     public ResponseEntity<String> createCompany(@Valid @RequestBody CreateCompanyRequestDTO createCompanyRequestDTO){
         companyService.createCompany(createCompanyRequestDTO);
+        return new ResponseEntity<>("Company Created Successfully!", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/oauth")
+    public ResponseEntity<String> createCompanyOauth(
+            @Valid @RequestBody CreateCompanyFromOAuthRequestDTO requestDTO
+            ){
+        companyService.createCompanyFromOAuth(requestDTO);
         return new ResponseEntity<>("Company Created Successfully!", HttpStatus.CREATED);
     }
 
