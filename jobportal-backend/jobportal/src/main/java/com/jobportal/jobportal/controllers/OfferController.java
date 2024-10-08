@@ -1,6 +1,7 @@
 package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
+import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.dtos.offer.SimilarOfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.Offer;
@@ -37,7 +38,7 @@ public class OfferController {
     }
 
     @GetMapping("/{offerId}")
-    public ResponseEntity<OfferResponseDTO> getOffer(@PathVariable long offerId){
+    public ResponseEntity<OfferDetailsResponseDTO> getOffer(@PathVariable long offerId){
         return ResponseEntity.ok(offerService.getOffer(offerId));
     }
 

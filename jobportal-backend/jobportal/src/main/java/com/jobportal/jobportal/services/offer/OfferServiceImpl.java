@@ -1,6 +1,7 @@
 package com.jobportal.jobportal.services.offer;
 
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
+import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.*;
 import com.jobportal.jobportal.entities.user.Company;
@@ -15,10 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -75,13 +74,18 @@ public class OfferServiceImpl implements OfferService {
         Sort.Direction direction = "desc".equalsIgnoreCase(orderBy) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return Sort.by(direction, sortField);
     }
+
     @Override
-    public OfferResponseDTO getOffer(long offerId) {
+    public OfferDetailsResponseDTO getOffer(long offerId) {
         Offer offer = offerRepository
                 .findById(offerId)
                 .orElseThrow(() -> new OfferDoesNotExistsException("Offer does not exists"));
-        return offerMapper.toOfferResponseFromOffer(offer);
+
+        OfferResponseDTO offerResponseFromOffer = offerMapper.toOfferResponseFromOffer(offer);
+
+        return null;
     }
+
     @Override
     @Transactional
     public void addOffer(OfferCreateRequestDTO requestDTO) {
