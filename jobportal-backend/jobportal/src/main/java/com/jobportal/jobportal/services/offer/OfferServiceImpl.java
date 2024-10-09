@@ -1,12 +1,22 @@
 package com.jobportal.jobportal.services.offer;
 
+import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
+import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeResponseDTO;
+import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
+import com.jobportal.jobportal.dtos.localization.LocalizationResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
+import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
+import com.jobportal.jobportal.dtos.worktype.WorkTypeResponseDTO;
+import com.jobportal.jobportal.entities.Localization;
 import com.jobportal.jobportal.entities.offer.*;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.exceptions.offer.*;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
+import com.jobportal.jobportal.mappers.LocalizationMapper;
 import com.jobportal.jobportal.mappers.OfferMapper;
+import com.jobportal.jobportal.mappers.UserMapper;
 import com.jobportal.jobportal.repositories.*;
 import com.jobportal.jobportal.services.localization.LocalizationService;
 import jakarta.transaction.Transactional;
@@ -18,7 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -34,8 +44,10 @@ public class OfferServiceImpl implements OfferService {
     private final OfferEmploymentTypeRepository offerEmploymentTypeRepository;
     private final OfferWorkTypeRepository offerWorkTypeRepository;
     private final LocalizationService localizationService;
+    private final LocalizationMapper localizationMapper;
+    private final UserMapper userMapper;
 
-    public OfferServiceImpl(OfferRepository offerRepository, TechnologyRepository technologyRepository, ExperienceRepository experienceRepository, WorkTypeRepository workTypeRepository, EmploymentTypeRepository employmentTypeRepository, CompanyRepository companyRepository, OfferMapper offerMapper, OfferTechnologyRepository offerTechnologyRepository, OfferExperienceRepository offerExperienceRepository, OfferEmploymentTypeRepository offerEmploymentTypeRepository, OfferWorkTypeRepository offerWorkTypeRepository, LocalizationService localizationService) {
+    public OfferServiceImpl(OfferRepository offerRepository, TechnologyRepository technologyRepository, ExperienceRepository experienceRepository, WorkTypeRepository workTypeRepository, EmploymentTypeRepository employmentTypeRepository, CompanyRepository companyRepository, OfferMapper offerMapper, OfferTechnologyRepository offerTechnologyRepository, OfferExperienceRepository offerExperienceRepository, OfferEmploymentTypeRepository offerEmploymentTypeRepository, OfferWorkTypeRepository offerWorkTypeRepository, LocalizationService localizationService, LocalizationMapper localizationMapper, UserMapper userMapper) {
         this.offerRepository = offerRepository;
         this.technologyRepository = technologyRepository;
         this.experienceRepository = experienceRepository;
@@ -48,6 +60,8 @@ public class OfferServiceImpl implements OfferService {
         this.offerEmploymentTypeRepository = offerEmploymentTypeRepository;
         this.offerWorkTypeRepository = offerWorkTypeRepository;
         this.localizationService = localizationService;
+        this.localizationMapper = localizationMapper;
+        this.userMapper = userMapper;
     }
     @Override
     public List<OfferResponseDTO> getAllOffers(String orderBy, String sortBy) {
@@ -75,13 +89,57 @@ public class OfferServiceImpl implements OfferService {
         Sort.Direction direction = "desc".equalsIgnoreCase(orderBy) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return Sort.by(direction, sortField);
     }
+
     @Override
-    public OfferResponseDTO getOffer(long offerId) {
+    public OfferDetailsResponseDTO getOffer(long offerId) {
         Offer offer = offerRepository
                 .findById(offerId)
                 .orElseThrow(() -> new OfferDoesNotExistsException("Offer does not exists"));
-        return offerMapper.toOfferResponseFromOffer(offer);
+
+        OfferResponseDTO offerResponseFromOffer = offerMapper.toOfferResponseFromOffer(offer);
+
+        List<OfferTechnology> offerTechnologyList = offerTechnologyRepository.findAllByOfferId(offerId);
+        List<TechnologyResponseDTO> technologyResponseDTOList = new ArrayList<>();
+        offerTechnologyList.forEach(
+                offerTechnology -> technologyResponseDTOList
+                        .add(offerMapper.toTechnologyResponseDTOFromTechnology(offerTechnology.getTechnology())));
+
+        List<OfferWorkType> offerWorkTypeList = offerWorkTypeRepository.findAllByOfferId(offerId);
+        List<WorkTypeResponseDTO> workTypeResponseDTOList = new ArrayList<>();
+        offerWorkTypeList.forEach(
+                offerWorkType -> workTypeResponseDTOList
+                        .add(offerMapper.toWorkTypeResponseDTOFromWorkType(offerWorkType.getWorkType()))
+        );
+
+        List<OfferExperience> offerExperienceList = offerExperienceRepository.findAllByOfferId(offerId);
+        List<ExperienceResponseDTO> experienceResponseDTOList = new ArrayList<>();
+        offerExperienceList.forEach(
+                offerExperience -> experienceResponseDTOList
+                        .add(offerMapper.toExperienceResponseDTOFromExperience(offerExperience.getExperience()))
+        );
+
+        List<OfferEmploymentType> offerEmploymentTypeList = offerEmploymentTypeRepository.findAllByOfferId(offerId);
+        List<EmploymentTypeResponseDTO> employmentTypeResponseDTOList = new ArrayList<>();
+        offerEmploymentTypeList.forEach(
+                offerEmploymentType -> employmentTypeResponseDTOList
+                        .add(offerMapper.toEmploymentTypeResponseDTOFromEmploymentType(offerEmploymentType.getEmploymentType()))
+        );
+
+        LocalizationResponseDTO localizationResponseDTOFromLocalization = localizationMapper.toLocalizationResponseDTOFromLocalization(offer.getLocalization());
+
+        CompanyResponseDTO responseFromCompany = userMapper.toResponseFromCompany(offer.getCompany());
+
+        return new OfferDetailsResponseDTO(
+                offerResponseFromOffer,
+                technologyResponseDTOList,
+                workTypeResponseDTOList,
+                experienceResponseDTOList,
+                employmentTypeResponseDTOList,
+                localizationResponseDTOFromLocalization,
+                responseFromCompany
+        );
     }
+
     @Override
     @Transactional
     public void addOffer(OfferCreateRequestDTO requestDTO) {
@@ -162,6 +220,7 @@ public class OfferServiceImpl implements OfferService {
                 }
         );
     }
+
     @Override
     @Transactional
     public void deleteOffer(long offerId) {
