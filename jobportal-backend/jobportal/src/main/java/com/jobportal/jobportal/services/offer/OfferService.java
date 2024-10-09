@@ -13,6 +13,6 @@ public interface OfferService {
     OfferResponseDTO getOffer(long offerId);
     void addOffer(OfferCreateRequestDTO requestDTO);
     void deleteOffer(long offerId);
-    //List<OfferResponseDTO> getOfferByLocalizationName(String localization);
     Page<OfferResponseDTO> getNextOffers(Pageable pageable);
+    List<OfferResponseDTO> getOffersByFilter(String localization, Integer minSalary, Integer maxSalary, List<Integer> workTypeIds, List<Integer> technologiesIds, List<Integer> experienceIds, List<Integer> employmentsTypeIds);
 }

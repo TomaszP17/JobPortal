@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.List;
 
@@ -54,10 +55,16 @@ public class OfferController {
     }
 
     @GetMapping("/filter")
-    public List<Offer> getOffersByLocalization(
-            @RequestParam(required = false) String localization
+    public ResponseEntity<List<OfferResponseDTO>> getOffersByLocalization(
+            @RequestParam(required = false) String localization,
+            @RequestParam(required = false) Integer minSalary,
+            @RequestParam(required = false) Integer maxSalary,
+            @RequestParam(required = false) List<Integer> workTypeIds,
+            @RequestParam(required = false) List<Integer> technologiesIds,
+            @RequestParam(required = false) List<Integer> experienceIds,
+            @RequestParam(required = false) List<Integer> employmentsTypeIds
     ){
-        return null;
+        return new ResponseEntity<>(offerService.getOffersByFilter(localization, minSalary, maxSalary, workTypeIds, technologiesIds, experienceIds, employmentsTypeIds), HttpStatus.OK);
     }
 
     @GetMapping("/similar-offers")
