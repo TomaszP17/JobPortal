@@ -15,4 +15,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     @Query(value = "SELECT id, title, expiry_date, salary_min, salary_max, description, similarity_score " +
             "FROM get_similar_offers_with_details(:offerId, :offerCount)", nativeQuery = true)
     List<Object[]> getSimilarOffersWithDetails(@Param("offerId") long offerId, @Param("offerCount") int offerCount);
+
+    List<Offer> findAllByLocalizationName(String localizationName);
 }

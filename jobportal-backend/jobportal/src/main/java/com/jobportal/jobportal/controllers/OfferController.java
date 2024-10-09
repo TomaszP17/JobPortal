@@ -54,6 +54,7 @@ public class OfferController {
         return new ResponseEntity<>("Deleted Offer successfully!", HttpStatus.OK);
     }
 
+    //todo: add pagination and sorting and dto
     @GetMapping("/filter")
     public ResponseEntity<List<OfferResponseDTO>> getOffersByLocalization(
             @RequestParam(required = false) String localization,
