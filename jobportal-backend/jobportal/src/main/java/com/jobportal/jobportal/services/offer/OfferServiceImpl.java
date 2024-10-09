@@ -180,10 +180,11 @@ public class OfferServiceImpl implements OfferService {
     public List<OfferResponseDTO> getOffersByFilter(String localization, Integer minSalary, Integer maxSalary, List<Integer> workTypeIds, List<Integer> technologiesIds, List<Integer> experienceIds, List<Integer> employmentsTypeIds) {
 
         //List<OfferResponseDTO> resultList = new ArrayList<>();
-        //todo: later change it to different localization
+        //todo: later change it to different localization ex. Wroc than Wroclaw
         List<Offer> allByLocalizationName = offerRepository.findAllByLocalizationName(localization);
 
-        //allByLocalizationName.forEach(offerMapper::toOfferResponseFromOffer);
+
+
         return allByLocalizationName.stream().map(offerMapper::toOfferResponseFromOffer).toList();
     }
 }

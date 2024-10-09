@@ -1,6 +1,5 @@
 package com.jobportal.jobportal.repositories;
 
-import com.jobportal.jobportal.dtos.offer.SimilarOfferResponseDTO;
 import com.jobportal.jobportal.entities.offer.Offer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +16,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Object[]> getSimilarOffersWithDetails(@Param("offerId") long offerId, @Param("offerCount") int offerCount);
 
     List<Offer> findAllByLocalizationName(String localizationName);
+
+    List<>
 }
