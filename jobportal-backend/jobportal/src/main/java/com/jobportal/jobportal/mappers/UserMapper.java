@@ -4,10 +4,7 @@ import com.jobportal.jobportal.dtos.admin.AdminResponseDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminRequestDTO;
 import com.jobportal.jobportal.dtos.admin.CreateAdminResponseDTO;
 import com.jobportal.jobportal.dtos.candidate.*;
-import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyFromOAuthRequestDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyRequestDTO;
-import com.jobportal.jobportal.dtos.company.CreateCompanyResponseDTO;
+import com.jobportal.jobportal.dtos.company.*;
 import com.jobportal.jobportal.entities.user.Admin;
 import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
@@ -23,7 +20,10 @@ public interface UserMapper {
     CandidateResponseDTO toResponseFromCandidate(Candidate candidate);
     UpdateCandidateResponseDTO toUpdateResponseFromCandidate(Candidate candidate);
     Candidate toCandidateFromRequestOAuthRequest(CreateCandidateFromAuthRequestDTO createCandidateFromAuthRequestDTO);
-    CreateCandidateFromOAuthResponseDTO tiCreateResponseFromOAuthRequest(Candidate candidate);
+    CreateCandidateFromOAuthResponseDTO toCreateResponseFromOAuthRequest(Candidate candidate);
+
+    @Mapping(target = "role", source = "role")
+    CurrentUserCandidateDTO toCurrentUserCandidateDTOFromCurrentUser(Candidate currentUser, String role);
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     void updateCandidateFromCreateRequest(CreateCandidateRequestDTO candidateDTO, @MappingTarget Candidate candidate, @Context PasswordEncoder passwordEncoder);
@@ -35,6 +35,9 @@ public interface UserMapper {
     CreateCompanyResponseDTO toCreateResponseFromCompany(Company company);
     CompanyResponseDTO toResponseFromCompany(Company company);
     Company toCompanyFromRequestOAuth(CreateCompanyFromOAuthRequestDTO requestDTO);
+
+    @Mapping(target = "role", source = "role")
+    CurrentUserCompanyDTO toCurrentUserCompanyDTOFromCurrentUser(Company company, String role);
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     void updateCompanyFromCreateRequest(CreateCompanyRequestDTO companyRequestDTO, @MappingTarget Company company, @Context PasswordEncoder passwordEncoder);

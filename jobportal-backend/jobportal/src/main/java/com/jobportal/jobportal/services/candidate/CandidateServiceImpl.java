@@ -12,7 +12,6 @@ import com.jobportal.jobportal.services.pdf.PdfService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -114,6 +113,13 @@ public class CandidateServiceImpl implements CandidateService{
                 .build();
 
         userAuthorityRepository.save(userAuthority);
-        return userMapper.tiCreateResponseFromOAuthRequest(candidate);
+        return userMapper.toCreateResponseFromOAuthRequest(candidate);
+    }
+
+    @Override
+    public CurrentUserCandidateDTO getCandidateByEmail(String email) {
+        Candidate candidate = candidateRepository.findByEmail(email).orElseThrow(() -> new UserDoesNotExistException("Candidate with email: " + email + " does not exist"));
+
+        return userMapper.toCurrentUserCandidateDTOFromCurrentUser(candidate, "ROLE_CANDIDATE");
     }
 }

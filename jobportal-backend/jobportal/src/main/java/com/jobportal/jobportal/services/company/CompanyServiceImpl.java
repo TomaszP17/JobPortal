@@ -2,7 +2,6 @@ package com.jobportal.jobportal.services.company;
 
 import com.jobportal.jobportal.dtos.company.*;
 import com.jobportal.jobportal.entities.user.Authority;
-import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.UserAuthority;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
@@ -110,5 +109,12 @@ public class CompanyServiceImpl implements CompanyService{
                 .build();
 
         userAuthorityRepository.save(userAuthority);
+    }
+
+    @Override
+    public CurrentUserCompanyDTO getCompanyByEmail(String email) {
+        Company company = companyRepository.findByEmail(email).orElseThrow(() -> new UserDoesNotExistException("Company with email: " + email + " does not exist"));
+
+        return userMapper.toCurrentUserCompanyDTOFromCurrentUser(company, "ROLE_COMPANY");
     }
 }

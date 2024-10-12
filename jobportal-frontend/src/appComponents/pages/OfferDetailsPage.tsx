@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {useParams} from 'react-router-dom'
 import PageWithNavbarAndFooterLayout from '../layouts/PageWithNavbarAndFooterLayout'
-import { OfferTitle } from '../atoms/OfferTitle'
-import { OfferSalary } from '../atoms/OfferSalary'
-import { OfferExpiryDate } from '../atoms/OfferExpiryDate'
-import { Label } from '../atoms/Label'
-import { Button } from '../atoms/Button'
+import {OfferTitle} from '../atoms/OfferTitle'
+import {OfferSalary} from '../atoms/OfferSalary'
+import {OfferExpiryDate} from '../atoms/OfferExpiryDate'
+import {Label} from '../atoms/Label'
+import {Button} from '../atoms/Button'
 import {Api} from "@/types/api.ts";
 import {Spinner} from "@/appComponents/atoms/Spinner.tsx";
+import JobOffersMap from "@/appComponents/organisms/JobOffersMap.tsx";
 
 interface OfferResponseDTO {
     id?: number
@@ -19,7 +20,7 @@ interface OfferResponseDTO {
 }
 
 export default function OfferDetailsPage() {
-    const { offerId } = useParams<{ offerId: number }>()
+    const {offerId} = useParams<{ offerId: number }>()
     const [offer, setOffer] = useState<OfferResponseDTO | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -28,7 +29,7 @@ export default function OfferDetailsPage() {
         console.log(offerId)
         const fetchOfferDetails = async () => {
             try {
-                if(offerId) {
+                if (offerId) {
                     const apiClient = new Api();
                     const response = await apiClient.api.getOffer(offerId);
                     const data = await response.json();
@@ -48,7 +49,7 @@ export default function OfferDetailsPage() {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center w-full h-screen">
-                <Spinner size="lg" />
+                <Spinner size="lg"/>
             </div>
         );
     }
@@ -63,18 +64,23 @@ export default function OfferDetailsPage() {
 
     return (
         <PageWithNavbarAndFooterLayout>
-            <div className="max-w-4xl mx-auto p-6 bg-matteBlack-600">
-                <OfferTitle title={offer.title} />
-                <div className="mt-4 flex justify-between items-center">
-                    <OfferSalary min={offer.salaryMin} max={offer.salaryMax} />
-                    <OfferExpiryDate date={offer.expiryDate} />
+            <div className={"flex flex-row max-w-[1200px] m-auto"}>
+                <div className="max-w-4xl mx-auto p-6 bg-white">
+                    <OfferTitle title={offer.title}/>
+                    <div className="mt-4 flex justify-between items-center">
+                        <OfferSalary min={offer.salaryMin} max={offer.salaryMax}/>
+                        <OfferExpiryDate date={offer.expiryDate}/>
+                    </div>
+                    <div className="mt-6">
+                        <Label>Description</Label>
+                        <p className="mt-2 text-gray-600">{offer.description}</p>
+                    </div>
+                    <div className="mt-8">
+                        <Button>Apply Now</Button>
+                    </div>
                 </div>
-                <div className="mt-6">
-                    <Label>Description</Label>
-                    <p className="mt-2 text-gray-600">{offer.description}</p>
-                </div>
-                <div className="mt-8">
-                    <Button>Apply Now</Button>
+                <div className={"w-full"}>
+                    <JobOffersMap/>
                 </div>
             </div>
         </PageWithNavbarAndFooterLayout>

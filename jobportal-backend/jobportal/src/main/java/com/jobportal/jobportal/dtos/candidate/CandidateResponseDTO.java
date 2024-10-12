@@ -16,5 +16,5 @@ public record CandidateResponseDTO(
         String githubLink,
 
         @URL(message = "Linkedin link should be valid")
-        String linkedinLink) {
+        String linkedinLink){
 }

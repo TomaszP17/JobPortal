@@ -11,7 +11,7 @@ interface JobOfferMarkerProps {
 }
 
 const JobOfferMarker: React.FC<JobOfferMarkerProps> = ({ latitude, longitude, onClick }) => (
-    <Marker latitude={latitude} longitude={longitude}>
+    <Marker latitude={latitude} longitude={longitude} className={"cursor-pointer"} >
         <div onClick={onClick}>
             <JobOfferIcon />
         </div>

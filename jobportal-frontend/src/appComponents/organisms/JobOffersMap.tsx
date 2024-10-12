@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Map, {Marker, Popup, type ViewStateChangeEvent} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Api, type LocalizationCoordinatesResponseDTO } from '@/types/api';
+import JobOfferMarker from "@/appComponents/molecules/map/JobOfferMarker.tsx";
+import JobOfferTooltip from "@/appComponents/molecules/map/JobOfferTooltip.tsx";
 
 const JobOffersMap: React.FC = () => {
     const [markers, setMarkers] = useState<LocalizationCoordinatesResponseDTO[]>([]);
@@ -46,24 +48,27 @@ const JobOffersMap: React.FC = () => {
             >
                 {markers.map((marker, id) => (
                     (marker.lng && marker.lat) &&
-                    <Marker
-                        key={id}
-                        longitude={marker.lng}
-                        latitude={marker.lat}
-                        anchor="bottom"
-                        onClick={(e) => {
-                            e.originalEvent.stopPropagation();
-                            setPopupInfo(marker);
-                        }}
-                    >
-                        <div style={{
-                            backgroundColor: 'red',
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                        }} />
-                    </Marker>
+
+                    <JobOfferMarker key={id} longitude={marker.lng} latitude={marker.lat} onClick={() => console.log("sigma")} />
+
+                    // <Marker
+                    //     key={id}
+                    //     longitude={marker.lng}
+                    //     latitude={marker.lat}
+                    //     anchor="bottom"
+                    //     onClick={(e) => {
+                    //         e.originalEvent.stopPropagation();
+                    //         setPopupInfo(marker);
+                    //     }}
+                    // >
+                    //     <div style={{
+                    //         backgroundColor: 'red',
+                    //         width: '10px',
+                    //         height: '10px',
+                    //         borderRadius: '50%',
+                    //         cursor: 'pointer',
+                    //     }} />
+                    // </Marker>
                 ))}
 
                 {popupInfo && (

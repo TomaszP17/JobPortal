@@ -1,9 +1,12 @@
 package com.jobportal.jobportal.controllers;
 
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.user.CurrentUserDTO;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.helpers.JwtCookiesHelpers;
 import com.jobportal.jobportal.services.user.UserService;
 import com.jobportal.jobportal.services.user.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +18,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtCookiesHelpers jwtCookiesHelpers;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtCookiesHelpers jwtCookiesHelpers) {
         this.userService = userService;
+        this.jwtCookiesHelpers = jwtCookiesHelpers;
     }
 
     @GetMapping
@@ -52,4 +57,9 @@ public class UserController {
         userService.deleteFavouriteOffer(userId, offerId);
         return new ResponseEntity<>("Deleted Favourite Offer Successfully!", HttpStatus.OK);
     }
+
+    @GetMapping("/current-user-info")
+    public ResponseEntity<CurrentUserDTO> getCurrentUserInfo(){
+        return new ResponseEntity<>(userService.getCurrentUser(),HttpStatus.OK);
+    };
 }

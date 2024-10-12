@@ -2,6 +2,7 @@ package com.jobportal.jobportal.repositories;
 
 import com.jobportal.jobportal.dtos.company.CompanyResponseOfferStatsDTO;
 import com.jobportal.jobportal.entities.user.Company;
+import jakarta.validation.constraints.Email;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     List<CompanyResponseOfferStatsDTO> findCompaniesWithOfferStats(@Param("sortBy") String sortBy, Pageable pageable);
 
     Optional<Company> findByEmail(String email);
+
 }

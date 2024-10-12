@@ -51,11 +51,13 @@ public abstract class User {
     @Column(name = "linkedin_link")
     private String linkedinLink;
 
+    @Builder.Default
     @Column(name = "is_completed", nullable = false)
-    private Boolean isCompleted = Boolean.TRUE;
+    private Boolean isCompleted = true;
 
+    @Builder.Default
     @Column(name = "is_oauth", nullable = false)
-    private Boolean isOauth = Boolean.FALSE;
+    private Boolean isOauth = false;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

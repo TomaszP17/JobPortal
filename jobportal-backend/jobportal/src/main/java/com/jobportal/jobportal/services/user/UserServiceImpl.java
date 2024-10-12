@@ -1,6 +1,8 @@
 package com.jobportal.jobportal.services.user;
 
+import com.jobportal.jobportal.dtos.candidate.CandidateResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.user.CurrentUserDTO;
 import com.jobportal.jobportal.entities.UserFavouriteOffer;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.entities.user.Authority;
@@ -13,7 +15,13 @@ import com.jobportal.jobportal.exceptions.user.FavouriteOfferAlreadyExistsExcept
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.OfferMapper;
 import com.jobportal.jobportal.repositories.*;
+import com.jobportal.jobportal.services.candidate.CandidateService;
+import com.jobportal.jobportal.services.company.CompanyService;
+import com.jobportal.jobportal.services.offer.OfferService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,14 +34,18 @@ public class UserServiceImpl implements UserService{
     private final OfferMapper offerMapper;
     private final AuthorityRepository authorityRepository;
     private final UserAuthorityRepository userAuthorityRepository;
+    private final CandidateService candidateService;
+    private final CompanyService companyService;
 
-    public UserServiceImpl(UserRepository userRepository, UserFavouriteOfferRepository userFavouriteOfferRepository, OfferRepository offerRepository, OfferMapper offerMapper, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserFavouriteOfferRepository userFavouriteOfferRepository, OfferRepository offerRepository, OfferMapper offerMapper, AuthorityRepository authorityRepository, UserAuthorityRepository userAuthorityRepository, CandidateService candidateService, CompanyService companyService) {
         this.userRepository = userRepository;
         this.userFavouriteOfferRepository = userFavouriteOfferRepository;
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
         this.authorityRepository = authorityRepository;
         this.userAuthorityRepository = userAuthorityRepository;
+        this.candidateService = candidateService;
+        this.companyService = companyService;
     }
     @Override
     public List<User> getAllUsers() {
@@ -102,4 +114,24 @@ public class UserServiceImpl implements UserService{
         userFavouriteOfferRepository.delete(userFavouriteOffer);
     }
 
+    //current db structure enables user to have multiple roles, however in the future we would like to restrict the user to have a single role with enums
+    @Override
+    public CurrentUserDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+        String role = authentication.getAuthorities().stream().toList().getFirst().getAuthority();
+
+        CurrentUserDTO userDTO;
+
+        if(role.equals("ROLE_CANDIDATE")){
+           userDTO = candidateService.getCandidateByEmail(email);
+        } else if (role.equals("ROLE_COMPANY")){
+           userDTO = companyService.getCompanyByEmail(email);
+        } else {
+            throw new AuthorityDoesNotExistException("Provided authority does not exist");
+        }
+
+       return userDTO;
+    };
 }

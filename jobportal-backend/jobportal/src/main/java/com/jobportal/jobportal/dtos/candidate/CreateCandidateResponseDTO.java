@@ -10,5 +10,5 @@ public record CreateCandidateResponseDTO(
         @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
         @Pattern(regexp = "^[a-zA-Zà-žÀ-Ž'\\- ]+$", message = "First name contains invalid characters")
         String firstName
-) {
+){
 }

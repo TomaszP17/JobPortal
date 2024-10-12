@@ -1,8 +1,6 @@
 package com.jobportal.jobportal.services.company;
 
 import com.jobportal.jobportal.dtos.company.*;
-import com.jobportal.jobportal.entities.user.Candidate;
-import com.jobportal.jobportal.entities.user.Company;
 
 import java.util.List;
 
@@ -13,4 +11,5 @@ public interface CompanyService {
     List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size);
     void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO);
     void createCompanyFromOAuth(CreateCompanyFromOAuthRequestDTO requestDTO);
+    CurrentUserCompanyDTO getCompanyByEmail(String email);
 }
