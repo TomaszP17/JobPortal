@@ -5,6 +5,7 @@ import com.jobportal.jobportal.entities.user.Authority;
 import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.entities.user.UserAuthority;
+import com.jobportal.jobportal.enums.UserType;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.UserMapper;
@@ -13,6 +14,8 @@ import com.jobportal.jobportal.repositories.CompanyRepository;
 import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,5 +113,17 @@ public class CompanyServiceImpl implements CompanyService{
                 .build();
 
         userAuthorityRepository.save(userAuthority);
+    }
+
+    @Override
+    public CurrentUserCompanyDTO getCurrentUserCompany() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = (String) authentication.getPrincipal();
+
+        Company company = companyRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("User with email: " + email + " does not exist."));
+
+        return userMapper.toCurrentUserCompanyResponse(company, UserType.ROLE_COMPANY.name());
     }
 }

@@ -13,4 +13,5 @@ public interface CompanyService {
     List<CompanyResponseOfferStatsDTO> getCompaniesWithOfferStats(String sortBy, int page, int size);
     void updateCompany(Long id, CreateCompanyRequestDTO createCompanyRequestDTO);
     void createCompanyFromOAuth(CreateCompanyFromOAuthRequestDTO requestDTO);
+    CurrentUserCompanyDTO getCurrentUserCompany();
 }

@@ -2,6 +2,7 @@ package com.jobportal.jobportal.services.candidate;
 
 import com.jobportal.jobportal.dtos.candidate.*;
 import com.jobportal.jobportal.entities.user.*;
+import com.jobportal.jobportal.enums.UserType;
 import com.jobportal.jobportal.exceptions.authority.AuthorityDoesNotExistException;
 import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.mappers.UserMapper;
@@ -9,10 +10,11 @@ import com.jobportal.jobportal.repositories.AuthorityRepository;
 import com.jobportal.jobportal.repositories.CandidateRepository;
 import com.jobportal.jobportal.repositories.UserAuthorityRepository;
 import com.jobportal.jobportal.services.pdf.PdfService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -114,6 +116,19 @@ public class CandidateServiceImpl implements CandidateService{
                 .build();
 
         userAuthorityRepository.save(userAuthority);
-        return userMapper.tiCreateResponseFromOAuthRequest(candidate);
+        return userMapper.toCreateResponseFromOAuthRequest(candidate);
+    }
+
+    @Override
+    public CurrentUserCandidateDTO getCurrentUserCandidate() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = (String) authentication.getPrincipal();
+
+        Candidate candidate = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("User with email: " + email + " does not exist."));
+
+        return userMapper.toCurrentUserCandidateResponse(candidate, UserType.ROLE_CANDIDATE.name());
+
     }
 }

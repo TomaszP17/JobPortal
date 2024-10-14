@@ -1,11 +1,18 @@
 package com.jobportal.jobportal.controllers;
 
+import com.jobportal.jobportal.dtos.candidate.CurrentUserCandidateDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.user.UserDTO;
+import com.jobportal.jobportal.entities.user.Candidate;
 import com.jobportal.jobportal.entities.user.User;
+import com.jobportal.jobportal.enums.UserType;
+import com.jobportal.jobportal.exceptions.user.UserDoesNotExistException;
 import com.jobportal.jobportal.services.user.UserService;
 import com.jobportal.jobportal.services.user.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +58,10 @@ public class UserController {
     public ResponseEntity<String> deleteFavouriteOffer(@PathVariable long userId, @PathVariable long offerId){
         userService.deleteFavouriteOffer(userId, offerId);
         return new ResponseEntity<>("Deleted Favourite Offer Successfully!", HttpStatus.OK);
+    }
+
+    @GetMapping("/current-user")
+    public ResponseEntity<UserDTO> getCurrentUser(){
+        return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
     }
 }
