@@ -391,6 +391,8 @@ export interface OfferResponseDTO {
   description?: string;
 }
 
+export type UserDTO = object;
+
 export interface TechnologyResponseDTO {
   /** @format int64 */
   id?: number;
@@ -463,6 +465,15 @@ export interface NewsResponseDTO {
   /** @format int32 */
   totalResults?: number;
   articles?: ArticleDTO[];
+}
+
+export interface LocalizationCoordinatesResponseDTO {
+  /** @format double */
+  lat?: number;
+  /** @format double */
+  lng?: number;
+  /** @uniqueItems true */
+  offerIds?: number[];
 }
 
 export interface CoordinatesDTO {
@@ -568,7 +579,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
   private baseApiParams: RequestParams = {
-    credentials: "include",
+    credentials: "same-origin",
     headers: {},
     redirect: "follow",
     referrerPolicy: "no-referrer",
@@ -580,18 +591,6 @@ export class HttpClient<SecurityDataType = unknown> {
 
   public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
-  };
-
-  private isRefreshing = false;
-  private refreshSubscribers: Array<() => void> = [];
-
-  private onRefreshed = () => {
-    this.refreshSubscribers.forEach((callback) => callback());
-    this.refreshSubscribers = [];
-  };
-
-  private addRefreshSubscriber = (callback: () => void) => {
-    this.refreshSubscribers.push(callback);
   };
 
   protected encodeQueryParam(key: string, value: any) {
@@ -612,8 +611,8 @@ export class HttpClient<SecurityDataType = unknown> {
     const query = rawQuery || {};
     const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
     return keys
-        .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-        .join("&");
+      .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+      .join("&");
   }
 
   protected addQueryParams(rawQuery?: QueryParamsType): string {
@@ -623,21 +622,21 @@ export class HttpClient<SecurityDataType = unknown> {
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
-        input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
     [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
     [ContentType.FormData]: (input: any) =>
-        Object.keys(input || {}).reduce((formData, key) => {
-          const property = input[key];
-          formData.append(
-              key,
-              property instanceof Blob
-                  ? property
-                  : typeof property === "object" && property !== null
-                      ? JSON.stringify(property)
-                      : `${property}`,
-          );
-          return formData;
-        }, new FormData()),
+      Object.keys(input || {}).reduce((formData, key) => {
+        const property = input[key];
+        formData.append(
+          key,
+          property instanceof Blob
+            ? property
+            : typeof property === "object" && property !== null
+              ? JSON.stringify(property)
+              : `${property}`,
+        );
+        return formData;
+      }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
@@ -678,128 +677,62 @@ export class HttpClient<SecurityDataType = unknown> {
   };
 
   public request = async <T = any, E = any>({
-                                              body,
-                                              secure,
-                                              path,
-                                              type,
-                                              query,
-                                              format,
-                                              baseUrl,
-                                              cancelToken,
-                                              ...params
-                                            }: FullRequestParams): Promise<HttpResponse<T, E>> => {
+    body,
+    secure,
+    path,
+    type,
+    query,
+    format,
+    baseUrl,
+    cancelToken,
+    ...params
+  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
-        ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
-            this.securityWorker &&
-            (await this.securityWorker(this.securityData))) ||
-        {};
+      ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
+        this.securityWorker &&
+        (await this.securityWorker(this.securityData))) ||
+      {};
     const requestParams = this.mergeRequestParams(params, secureParams);
     const queryString = query && this.toQueryString(query);
     const payloadFormatter = this.contentFormatters[type || ContentType.Json];
     const responseFormat = format || requestParams.format;
 
-    const makeRequest = () => {
-      return this.customFetch(
-          `${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`,
-          {
-            ...requestParams,
-            credentials: "include",
-            headers: {
-              ...(requestParams.headers || {}),
-              ...(type && type !== ContentType.FormData ? {"Content-Type": type} : {}),
-            },
-            signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
-            body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
-          },
-      );
-    };
+    return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
+      ...requestParams,
+      headers: {
+        ...(requestParams.headers || {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+      },
+      signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
+      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
+      const r = response.clone() as HttpResponse<T, E>;
+      r.data = null as unknown as T;
+      r.error = null as unknown as E;
 
-    let response = await makeRequest();
+      const data = !responseFormat
+        ? r
+        : await response[responseFormat]()
+            .then((data) => {
+              if (r.ok) {
+                r.data = data;
+              } else {
+                r.error = data;
+              }
+              return r;
+            })
+            .catch((e) => {
+              r.error = e;
+              return r;
+            });
 
-    if (response.status === 401) {
-      if (!this.isRefreshing) {
-        this.isRefreshing = true;
-
-        try {
-          const refreshResponse = await this.customFetch(
-              `${baseUrl || this.baseUrl || ""}/api/auth/refresh`,
-              {
-                method: "POST",
-                credentials: "include",
-              },
-          );
-
-          if (refreshResponse.ok) {
-            this.isRefreshing = false;
-            this.onRefreshed();
-
-            // Retry the original request
-            response = await makeRequest();
-          } else {
-            this.isRefreshing = false;
-            window.location.href = "/login";
-            throw new Error("Session expired. Please log in again.");
-          }
-        } catch (error) {
-          this.isRefreshing = false;
-          window.location.href = "/login";
-          throw error;
-        }
-      } else {
-        // Wait for the token to be refreshed
-        return new Promise<HttpResponse<T, E>>((resolve, reject) => {
-          this.addRefreshSubscriber(async () => {
-            try {
-              const newResponse = await makeRequest();
-              const result = await this.processResponse<T, E>(
-                  newResponse,
-                  responseFormat,
-                  cancelToken,
-              );
-
-              if (!newResponse.ok) throw result.error || new Error("Request failed");
-
-              resolve(result);
-            } catch (err) {
-              reject(err);
-            }
-          });
-        });
+      if (cancelToken) {
+        this.abortControllers.delete(cancelToken);
       }
-    }
 
-    const result = await this.processResponse<T, E>(response, responseFormat, cancelToken);
-
-    if (!response.ok) throw result.error || new Error("Request failed");
-    return result;
-  };
-
-  private processResponse = async <T, E>(
-      response: Response,
-      responseFormat: ResponseFormat | undefined,
-      cancelToken: CancelToken | undefined,
-  ): Promise<HttpResponse<T, E>> => {
-    const r = response.clone() as HttpResponse<T, E>;
-    r.data = null as unknown as T;
-    r.error = null as unknown as E;
-
-    try {
-      const data = !responseFormat ? r : await response[responseFormat]();
-
-      if (response.ok) {
-        r.data = data;
-      } else {
-        r.error = data;
-      }
-    } catch (e) {
-      r.error = e as E;
-    }
-
-    if (cancelToken) {
-      this.abortControllers.delete(cancelToken);
-    }
-
-    return r;
+      if (!response.ok) throw data;
+      return data;
+    });
   };
 }
 
@@ -848,7 +781,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/api/candidates/{id}
      */
     editCandidate: (id: number, data: CreateCandidateRequestDTO, params: RequestParams = {}) =>
-      this.request<object, any>({
+      this.request<UserDTO, any>({
         path: `/api/candidates/${id}`,
         method: "PUT",
         body: data,
@@ -1165,7 +1098,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/candidates/oauth
      */
     createCandidateOauth: (data: CreateCandidateFromAuthRequestDTO, params: RequestParams = {}) =>
-      this.request<object, any>({
+      this.request<UserDTO, any>({
         path: `/api/candidates/oauth`,
         method: "POST",
         body: data,
@@ -1338,6 +1271,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags user-controller
+     * @name GetCurrentUser
+     * @request GET:/api/users/current-user
+     */
+    getCurrentUser: (params: RequestParams = {}) =>
+      this.request<UserDTO, any>({
+        path: `/api/users/current-user`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags technology-controller
      * @name GetTechnology
      * @request GET:/api/technologies/{technologyId}
@@ -1494,6 +1441,34 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/news/api/news`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags localization-controller
+     * @name GetOffersLocalizationAndOfferId
+     * @request GET:/api/localization
+     */
+    getOffersLocalizationAndOfferId: (params: RequestParams = {}) =>
+      this.request<LocalizationCoordinatesResponseDTO[], any>({
+        path: `/api/localization`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags localization-controller
+     * @name GetAllLocalizations
+     * @request GET:/api/localization/all
+     */
+    getAllLocalizations: (params: RequestParams = {}) =>
+      this.request<UserDTO, any>({
+        path: `/api/localization/all`,
+        method: "GET",
         ...params,
       }),
 

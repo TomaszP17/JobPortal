@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {AuthForm} from '../molecules/AuthForm';
-import {Api, type LoginRequestDTO} from "@/types/api.ts";
+import {type LoginRequestDTO} from "@/types/api.ts";
+import apiClient from "@/apiClient";
 import {Link, useNavigate} from 'react-router-dom';
 import {Button} from "@/appComponents/atoms/Button.tsx";
 import {GoogleAuthButton} from "@/appComponents/atoms/GoogleAuthButton.tsx";
@@ -13,7 +14,6 @@ export function LoginForm() {
         password: "",
     });
 
-    const apiClient = new Api();
 
     const handleFormInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {id, value} = event.target;

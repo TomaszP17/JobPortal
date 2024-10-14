@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { OfferCard } from '@/appComponents/molecules/OfferCard';
 import {Api, type OfferResponseDTO, type PageOfferResponseDTO} from '@/types/api';
 import Skeleton from '@/appComponents/atoms/Skeleton';
+import apiClient from "@/apiClient";
 
 export const OfferList: React.FC = () => {
     const [offers, setOffers] = useState<OfferResponseDTO[]>([]);
@@ -17,7 +18,6 @@ export const OfferList: React.FC = () => {
         if (isLoading) return;
         setIsLoading(true);
         try {
-            const apiClient = new Api();
             const response = await apiClient.api.getNextOffers({page: page.current, size: 10})
             const data: PageOfferResponseDTO = await response.json();
 

@@ -6,7 +6,7 @@ import { OfferSalary } from '../atoms/OfferSalary'
 import { OfferExpiryDate } from '../atoms/OfferExpiryDate'
 import { Label } from '../atoms/Label'
 import { Button } from '../atoms/Button'
-import {Api} from "@/types/api.ts";
+import apiClient from "@/apiClient";
 import {Spinner} from "@/appComponents/atoms/Spinner.tsx";
 
 interface OfferResponseDTO {
@@ -19,7 +19,7 @@ interface OfferResponseDTO {
 }
 
 export default function OfferDetailsPage() {
-    const { offerId } = useParams<{ offerId: number }>()
+    const { offerId } = useParams<{ offerId: string }>()
     const [offer, setOffer] = useState<OfferResponseDTO | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -29,8 +29,7 @@ export default function OfferDetailsPage() {
         const fetchOfferDetails = async () => {
             try {
                 if(offerId) {
-                    const apiClient = new Api();
-                    const response = await apiClient.api.getOffer(offerId);
+                    const response = await apiClient.api.getOffer(parseInt(offerId));
                     const data = await response.json();
                     console.log(data);
                     setOffer(data);
@@ -64,10 +63,10 @@ export default function OfferDetailsPage() {
     return (
         <PageWithNavbarAndFooterLayout>
             <div className="max-w-4xl mx-auto p-6 bg-matteBlack-600">
-                <OfferTitle title={offer.title} />
+                <OfferTitle title={offer.title || ""} />
                 <div className="mt-4 flex justify-between items-center">
-                    <OfferSalary min={offer.salaryMin} max={offer.salaryMax} />
-                    <OfferExpiryDate date={offer.expiryDate} />
+                    <OfferSalary min={offer.salaryMin || 0} max={offer.salaryMax || 0} />
+                    <OfferExpiryDate date={offer.expiryDate || ""} />
                 </div>
                 <div className="mt-6">
                     <Label>Description</Label>

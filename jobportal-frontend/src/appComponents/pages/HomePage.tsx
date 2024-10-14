@@ -1,12 +1,10 @@
-// src/pages/HomePage.tsx
-
 import React, { useState, useEffect } from 'react';
 import { OfferList } from '@/appComponents/organisms/OfferList';
-import { Api } from '@/types/api';
 import type { OfferResponseDTO } from '@/types/api';
 import { Spinner } from '@/appComponents/atoms/Spinner';
 import PageWithNavbarAndFooterLayout from '@/appComponents/layouts/PageWithNavbarAndFooterLayout';
 import JobOffersMap from '@/appComponents/organisms/JobOffersMap';
+import apiClient from "@/apiClient/index.ts";
 
 export const HomePage: React.FC = () => {
     const [offers, setOffers] = useState<OfferResponseDTO[]>([]);
@@ -16,9 +14,8 @@ export const HomePage: React.FC = () => {
     useEffect(() => {
         const fetchOffers = async () => {
             try {
-                const apiClient = new Api();
                 const response = await apiClient.api.getOffers();
-                const data = await response.json();
+                const data: OfferResponseDTO[] = await response.json();
 
                 setOffers(data);
                 setIsLoading(false);
@@ -46,7 +43,7 @@ export const HomePage: React.FC = () => {
                 <h1 className="text-3xl font-bold mb-6">Job Offers</h1>
                 <div className="flex">
                     <div className="w-1/2 pr-4" style={{maxHeight: '100vh', overflowY: 'auto'}}>
-                        <OfferList offers={offers}/>
+                        <OfferList/>
                     </div>
                     <div className="w-1/2 h-screen">
                         <div className="sticky top-0 h-[600px]">

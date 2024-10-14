@@ -1,15 +1,13 @@
-// components/organisms/RegistrationForm.tsx
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthForm } from '../molecules/AuthForm';
-import { Api } from "@/types/api";
+import apiClient from "@/apiClient";
 import {Link, useNavigate} from 'react-router-dom';
 import {Button} from "@/appComponents/atoms/Button.tsx";
 import {GoogleAuthButton} from "@/appComponents/atoms/GoogleAuthButton.tsx";
 
 export function RegistrationForm() {
     const navigate = useNavigate();
-    const apiClient = new Api();
 
     const [isCompanyAccount, setIsCompanyAccount] = useState(false);
     const [formDataCompany, setFormDataCompany] = useState({

@@ -1,8 +1,7 @@
-// components/organisms/CompleteProfile.tsx
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthForm } from '../molecules/AuthForm';
-import { Api } from "@/types/api";
+import apiClient from "@/apiClient";
 import {useNavigate, useSearchParams} from 'react-router-dom';
 
 interface FormData {
@@ -17,7 +16,6 @@ interface FormData {
 export const CompleteProfile: React.FC = () => {
     const navigate = useNavigate();
     const [urlParams] = useSearchParams();
-    const apiClient = new Api();
     const [isCompany, setIsCompany] = useState<boolean>(false);
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
