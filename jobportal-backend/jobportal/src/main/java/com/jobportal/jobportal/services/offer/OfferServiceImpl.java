@@ -6,10 +6,10 @@ import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
 import com.jobportal.jobportal.dtos.localization.LocalizationResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
+import com.jobportal.jobportal.dtos.offer.OfferMarkerResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
 import com.jobportal.jobportal.dtos.worktype.WorkTypeResponseDTO;
-import com.jobportal.jobportal.entities.Localization;
 import com.jobportal.jobportal.entities.offer.*;
 import com.jobportal.jobportal.entities.user.Company;
 import com.jobportal.jobportal.exceptions.offer.*;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -233,5 +232,13 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Page<OfferResponseDTO> getNextOffers(Pageable pageable) {
         return offerRepository.findAll(pageable).map(offerMapper::toOfferResponseFromOffer);
+    }
+
+    @Override
+    public OfferMarkerResponseDTO getMarkedOffer(long offerId) {
+        Offer offer = offerRepository
+                .findById(offerId)
+                .orElseThrow(() -> new OfferDoesNotExistsException("Offer does not exists"));
+        return offerMapper.toOfferMarkerResponseFromOffer(offer);
     }
 }

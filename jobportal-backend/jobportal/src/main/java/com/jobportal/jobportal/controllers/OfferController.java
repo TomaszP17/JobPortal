@@ -1,9 +1,6 @@
 package com.jobportal.jobportal.controllers;
 
-import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
-import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
-import com.jobportal.jobportal.dtos.offer.SimilarOfferResponseDTO;
+import com.jobportal.jobportal.dtos.offer.*;
 import com.jobportal.jobportal.entities.offer.Offer;
 import com.jobportal.jobportal.services.offer.OfferService;
 import com.jobportal.jobportal.services.offer.SimilarOffer;
@@ -74,5 +71,10 @@ public class OfferController {
         Pageable pageable = PageRequest.of(page, size);
         Page<OfferResponseDTO> offersPage = offerService.getNextOffers(pageable);
         return new ResponseEntity<>(offersPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/marker/{offerId}")
+    public ResponseEntity<OfferMarkerResponseDTO> getOfferMarkedOnMap(@PathVariable long offerId){
+        return new ResponseEntity<>(offerService.getMarkedOffer(offerId), HttpStatus.OK);
     }
 }

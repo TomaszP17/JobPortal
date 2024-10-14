@@ -5,6 +5,7 @@ import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeResponseDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceCreateRequestDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
+import com.jobportal.jobportal.dtos.offer.OfferMarkerResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyCreateRequestDTO;
 import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
@@ -20,6 +21,8 @@ public interface OfferMapper {
     OfferCreateRequestDTO toCreateResponseFromOffer(Offer offer);
     Offer toOfferFromResponseDTO(OfferResponseDTO responseDTO);
     OfferResponseDTO toOfferResponseFromOffer(Offer offer);
+
+    OfferMarkerResponseDTO toOfferMarkerResponseFromOffer(Offer offer);
 
     EmploymentType toEmploymentTypeFromResponseDTO(EmploymentTypeResponseDTO responseDTO);
     EmploymentTypeResponseDTO toEmploymentTypeResponseDTOFromEmploymentType(EmploymentType employmentType);
