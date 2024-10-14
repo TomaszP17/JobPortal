@@ -1,9 +1,6 @@
 package com.jobportal.jobportal.services.offer;
 
-import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
-import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferMarkerResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.offer.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,6 +13,6 @@ public interface OfferService {
     void addOffer(OfferCreateRequestDTO requestDTO);
     void deleteOffer(long offerId);
     //List<OfferResponseDTO> getOfferByLocalizationName(String localization);
-    Page<OfferResponseDTO> getNextOffers(Pageable pageable);
+    Page<NextOfferResponseDTO> getNextOffers(Pageable pageable);
     OfferMarkerResponseDTO getMarkedOffer(long offerId);
 }

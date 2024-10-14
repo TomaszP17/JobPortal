@@ -4,10 +4,7 @@ import com.jobportal.jobportal.dtos.company.CompanyResponseDTO;
 import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeResponseDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
 import com.jobportal.jobportal.dtos.localization.LocalizationResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
-import com.jobportal.jobportal.dtos.offer.OfferDetailsResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferMarkerResponseDTO;
-import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
+import com.jobportal.jobportal.dtos.offer.*;
 import com.jobportal.jobportal.dtos.technology.TechnologyResponseDTO;
 import com.jobportal.jobportal.dtos.worktype.WorkTypeResponseDTO;
 import com.jobportal.jobportal.entities.offer.*;
@@ -21,10 +18,13 @@ import com.jobportal.jobportal.repositories.*;
 import com.jobportal.jobportal.services.localization.LocalizationService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -230,8 +230,34 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferResponseDTO> getNextOffers(Pageable pageable) {
-        return offerRepository.findAll(pageable).map(offerMapper::toOfferResponseFromOffer);
+    public Page<NextOfferResponseDTO> getNextOffers(Pageable pageable) {
+
+        List<NextOfferResponseDTO> nextOfferResponseDTOList = new ArrayList<>();
+        Page<Offer> all = offerRepository.findAll(pageable);
+
+        all.forEach(offer -> {
+            LocalDateTime createdAt = offer.getCreatedAt();
+            LocalDateTime now = LocalDateTime.now();
+            int between = (int) ChronoUnit.DAYS.between(createdAt, now);
+
+            List<OfferTechnology> allByOfferId = offerTechnologyRepository.findAllByOfferId(offer.getId());
+            List<String> technologiesNames = new ArrayList<>();
+            allByOfferId.forEach(offerTechnology -> technologiesNames.add(offerTechnology.getTechnology().getName()));
+
+            String name = offer.getCompany().getName();
+
+            NextOfferResponseDTO dto = new NextOfferResponseDTO(
+                    offer.getId(),
+                    offer.getTitle(),
+                    between,
+                    offer.getSalaryMin(),
+                    offer.getSalaryMax(),
+                    name,
+                    technologiesNames
+            );
+            nextOfferResponseDTOList.add(dto);
+        });
+        return new PageImpl<>(nextOfferResponseDTOList, pageable, all.getTotalElements());
     }
 
     @Override

@@ -64,12 +64,12 @@ public class OfferController {
     }
 
     @GetMapping("/next-offers")
-    public ResponseEntity<Page<OfferResponseDTO>> getNextOffers(
+    public ResponseEntity<Page<NextOfferResponseDTO>> getNextOffers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        Page<OfferResponseDTO> offersPage = offerService.getNextOffers(pageable);
+        Page<NextOfferResponseDTO> offersPage = offerService.getNextOffers(pageable);
         return new ResponseEntity<>(offersPage, HttpStatus.OK);
     }
 

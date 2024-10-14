@@ -4,6 +4,7 @@ import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeCreateRequestDT
 import com.jobportal.jobportal.dtos.employmenttype.EmploymentTypeResponseDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceCreateRequestDTO;
 import com.jobportal.jobportal.dtos.experience.ExperienceResponseDTO;
+import com.jobportal.jobportal.dtos.offer.NextOfferResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferCreateRequestDTO;
 import com.jobportal.jobportal.dtos.offer.OfferMarkerResponseDTO;
 import com.jobportal.jobportal.dtos.offer.OfferResponseDTO;
@@ -23,6 +24,8 @@ public interface OfferMapper {
     OfferResponseDTO toOfferResponseFromOffer(Offer offer);
 
     OfferMarkerResponseDTO toOfferMarkerResponseFromOffer(Offer offer);
+
+    NextOfferResponseDTO toNextOfferResponseDTOFromOffer(Offer offer);
 
     EmploymentType toEmploymentTypeFromResponseDTO(EmploymentTypeResponseDTO responseDTO);
     EmploymentTypeResponseDTO toEmploymentTypeResponseDTOFromEmploymentType(EmploymentType employmentType);
