@@ -48,10 +48,6 @@ The Job Portal project is a work-in-progress platform aimed at helping companies
 
 Use the `README.md` to get started.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 ### Built With
 
 * ![Java][Java]
@@ -62,8 +58,6 @@ Use the `README.md` to get started.
 * ![Stripe]
 * ![AWS]
 * ![Docker]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -86,18 +80,12 @@ Use the `README.md` to get started.
 - [ ] Dark theme
 - [ ] Apply functionality for candidates 
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- CONTACT -->
 ## Contact
 
 TomaszP17 - [Linkedin](https://www.linkedin.com/in/tomaszp17)
 
 Kuba0517 - [Linkedin](https://www.linkedin.com/in/jakub-ratuszniak-4685a5211)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
