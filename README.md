@@ -21,19 +21,8 @@ JavaJobs is going to be an advanced platform designed to connect Java developers
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -42,7 +31,7 @@ JavaJobs is going to be an advanced platform designed to connect Java developers
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<a href="https://ibb.co/4PmXrTg"><img src="https://i.ibb.co/pJ0MFzr/javajobs.png" alt="javajobs" border="0"></a>
 
 The Job Portal project is a work-in-progress platform aimed at helping companies post job offers and allowing users to browse Java-related job opportunities. The key goal of this project is to provide developers with a tool for finding relevant jobs, especially in the field of Java programming, and for companies to efficiently manage their listings.
 
